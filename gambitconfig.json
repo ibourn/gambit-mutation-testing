@@ -1,0 +1,10 @@
+[
+  {
+    "filename": "src/Ticketer.sol",
+    "contract": "Ticketer",
+    "solc_optimize": true,
+    "solc_remappings": [
+      "openzeppelin/contracts=lib/openzeppelin-contracts/contracts/"
+    ]
+  }
+]

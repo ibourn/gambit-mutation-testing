@@ -1,0 +1,114 @@
+[
+  {
+    "description": "IfStatementMutation",
+    "diff": "--- original\n+++ mutant\n@@ -14,7 +14,8 @@\n     constructor() Ownable(msg.sender) {}\n \n     function buyTicket(uint256 amount) external payable {\n-        if (amount == 0) revert InvalidValue();\n+        /// IfStatementMutation(`amount == 0` |==> `true`) of: `if (amount == 0) revert InvalidValue();`\n+        if (true) revert InvalidValue();\n         if (msg.value != amount * price) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n",
+    "id": "1",
+    "name": "mutants/1/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "IfStatementMutation",
+    "diff": "--- original\n+++ mutant\n@@ -14,7 +14,8 @@\n     constructor() Ownable(msg.sender) {}\n \n     function buyTicket(uint256 amount) external payable {\n-        if (amount == 0) revert InvalidValue();\n+        /// IfStatementMutation(`amount == 0` |==> `false`) of: `if (amount == 0) revert InvalidValue();`\n+        if (false) revert InvalidValue();\n         if (msg.value != amount * price) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n",
+    "id": "2",
+    "name": "mutants/2/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "IfStatementMutation",
+    "diff": "--- original\n+++ mutant\n@@ -15,7 +15,8 @@\n \n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n-        if (msg.value != amount * price) revert InvalidValue();\n+        /// IfStatementMutation(`msg.value != amount * price` |==> `true`) of: `if (msg.value != amount * price) revert InvalidValue();`\n+        if (true) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n \n",
+    "id": "3",
+    "name": "mutants/3/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "IfStatementMutation",
+    "diff": "--- original\n+++ mutant\n@@ -15,7 +15,8 @@\n \n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n-        if (msg.value != amount * price) revert InvalidValue();\n+        /// IfStatementMutation(`msg.value != amount * price` |==> `false`) of: `if (msg.value != amount * price) revert InvalidValue();`\n+        if (false) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n \n",
+    "id": "4",
+    "name": "mutants/4/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "BinaryOpMutation",
+    "diff": "--- original\n+++ mutant\n@@ -15,7 +15,8 @@\n \n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n-        if (msg.value != amount * price) revert InvalidValue();\n+        /// BinaryOpMutation(`*` |==> `+`) of: `if (msg.value != amount * price) revert InvalidValue();`\n+        if (msg.value != amount+price) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n \n",
+    "id": "5",
+    "name": "mutants/5/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "BinaryOpMutation",
+    "diff": "--- original\n+++ mutant\n@@ -15,7 +15,8 @@\n \n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n-        if (msg.value != amount * price) revert InvalidValue();\n+        /// BinaryOpMutation(`*` |==> `-`) of: `if (msg.value != amount * price) revert InvalidValue();`\n+        if (msg.value != amount-price) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n \n",
+    "id": "6",
+    "name": "mutants/6/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "BinaryOpMutation",
+    "diff": "--- original\n+++ mutant\n@@ -15,7 +15,8 @@\n \n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n-        if (msg.value != amount * price) revert InvalidValue();\n+        /// BinaryOpMutation(`*` |==> `/`) of: `if (msg.value != amount * price) revert InvalidValue();`\n+        if (msg.value != amount/price) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n \n",
+    "id": "7",
+    "name": "mutants/7/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "BinaryOpMutation",
+    "diff": "--- original\n+++ mutant\n@@ -15,7 +15,8 @@\n \n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n-        if (msg.value != amount * price) revert InvalidValue();\n+        /// BinaryOpMutation(`*` |==> `%`) of: `if (msg.value != amount * price) revert InvalidValue();`\n+        if (msg.value != amount%price) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n \n",
+    "id": "8",
+    "name": "mutants/8/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "BinaryOpMutation",
+    "diff": "--- original\n+++ mutant\n@@ -15,7 +15,8 @@\n \n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n-        if (msg.value != amount * price) revert InvalidValue();\n+        /// BinaryOpMutation(`*` |==> `**`) of: `if (msg.value != amount * price) revert InvalidValue();`\n+        if (msg.value != amount**price) revert InvalidValue();\n         ticketBalances[msg.sender] += amount;\n     }\n \n",
+    "id": "9",
+    "name": "mutants/9/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "DeleteExpressionMutation",
+    "diff": "--- original\n+++ mutant\n@@ -16,7 +16,8 @@\n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n         if (msg.value != amount * price) revert InvalidValue();\n-        ticketBalances[msg.sender] += amount;\n+        /// DeleteExpressionMutation(`ticketBalances[msg.sender] += amount` |==> `assert(true)`) of: `ticketBalances[msg.sender] += amount;`\n+        assert(true);\n     }\n \n     function ownerCollect() external {\n",
+    "id": "10",
+    "name": "mutants/10/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "AssignmentMutation",
+    "diff": "--- original\n+++ mutant\n@@ -16,7 +16,8 @@\n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n         if (msg.value != amount * price) revert InvalidValue();\n-        ticketBalances[msg.sender] += amount;\n+        /// AssignmentMutation(`amount` |==> `0`) of: `ticketBalances[msg.sender] += amount;`\n+        ticketBalances[msg.sender] += 0;\n     }\n \n     function ownerCollect() external {\n",
+    "id": "11",
+    "name": "mutants/11/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "AssignmentMutation",
+    "diff": "--- original\n+++ mutant\n@@ -16,7 +16,8 @@\n     function buyTicket(uint256 amount) external payable {\n         if (amount == 0) revert InvalidValue();\n         if (msg.value != amount * price) revert InvalidValue();\n-        ticketBalances[msg.sender] += amount;\n+        /// AssignmentMutation(`amount` |==> `1`) of: `ticketBalances[msg.sender] += amount;`\n+        ticketBalances[msg.sender] += 1;\n     }\n \n     function ownerCollect() external {\n",
+    "id": "12",
+    "name": "mutants/12/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "IfStatementMutation",
+    "diff": "--- original\n+++ mutant\n@@ -21,6 +21,7 @@\n \n     function ownerCollect() external {\n         (bool success,) = payable(msg.sender).call{value: address(this).balance}(\"\");\n-        if (!success) revert NativeTransferFailed();\n+        /// IfStatementMutation(`!success` |==> `true`) of: `if (!success) revert NativeTransferFailed();`\n+        if (true) revert NativeTransferFailed();\n     }\n }\n",
+    "id": "13",
+    "name": "mutants/13/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  },
+  {
+    "description": "IfStatementMutation",
+    "diff": "--- original\n+++ mutant\n@@ -21,6 +21,7 @@\n \n     function ownerCollect() external {\n         (bool success,) = payable(msg.sender).call{value: address(this).balance}(\"\");\n-        if (!success) revert NativeTransferFailed();\n+        /// IfStatementMutation(`!success` |==> `false`) of: `if (!success) revert NativeTransferFailed();`\n+        if (false) revert NativeTransferFailed();\n     }\n }\n",
+    "id": "14",
+    "name": "mutants/14/src/Ticketer.sol",
+    "original": "src/Ticketer.sol",
+    "sourceroot": "/home/ibournubuntu/DEVGAMBIT/gambit-mutation-testing"
+  }
+]
