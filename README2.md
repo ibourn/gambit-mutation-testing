@@ -38,7 +38,8 @@ Vous êtes couverts, mais avez vous tuez tout les mutants?
   - [Installation et configuration de Gambit](#installation-et-configuration-de-gambit)
   - [Création des mutants](#création-des-mutants)
   - [Les sorties produites par Gambit](#les-sorties-produites-par-gambit)
-  - [Limitations des tests de mutation avec Gambit](#limitations-des-tests-de-mutation-avec-gambit)
+  - [Limitations des tests de mutation](#limitations-des-tests-de-mutation-avec-gambit)
+- [Mise en pratique avec un exemple](mise-en-pratique-avec-un-exemple)
 - [Automatisation des tests de mutation avec Foundry](#automatisation-des-tests-de-mutation-avec-foundry)
   - [Exemple de script d'automatisation](#exemple-de-script-dautomatisation)
     - [Options du script](#options-du-script)
@@ -58,9 +59,9 @@ Vous êtes couverts, mais avez vous tuez tout les mutants?
 
 Vous avez atteint une couverture de test de 100% ? Félicitations ! Mais avez-vous réellement éliminé tous les mutants ? Loin d'être une simple corvée, les tests jouent un rôle crucial dans le développement des applications, y compris des smart contracts. Diverses métriques sont utilisées pour évaluer la qualité de nos tests, cherchant souvent à atteindre une couverture de code totale. Mais cela suffit-il à garantir leur pertinence et leur efficacité ? Une solution existe : tester nos tests pour obtenir une véritable mesure de la qualité de notre arsenal de tests.
 
-Récemment, grâce à une [vidéo](https://www.youtube.com/watch?v=HIN8lmj597M) de Owen Thurm, j'ai découvert l'outil Gambit de Certora, qui automatise la génération de mutations pour les contrats écrits en Solidity. Les tests de mutations demeurent largement sous-documentés, notamment dans le domaine de la blockchain, ce qui en fait un sujet méritant d'être davantage exploré et exposé.
+Récemment, grâce à une [vidéo](https://www.youtube.com/watch?v=HIN8lmj597M) de Owen Thurm, j'ai découvert l'outil [Gambit de Certora](https://github.com/Certora/gambit), qui automatise la génération de mutations pour les contrats écrits en Solidity. Les tests de mutations demeurent largement sous-documentés, notamment dans le domaine de la blockchain, ce qui en fait un sujet méritant d'être davantage exploré et exposé.
 
-Dans la suite de cet article, nous explorerons le concept des tests de mutations et leur utilité dans une suite de tests traditionnelle, avant de présenter un guide pratique pour installer et utiliser Gambit. Un script permettant d'automatiser les tests de mutations sera mis à disposition, ainsi qu'un dépôt reproduisant l'exemple de la vidéo. Cela offrira aux lecteurs la possibilité de suivre l'exemple, dans l'espoir que ces ressources pratiques faciliteront leur découverte de l'outil
+Dans la suite de cet article, nous explorerons leur concept et leur utilité dans une suite de tests traditionnelle, avant de présenter un guide pratique pour installer et utiliser Gambit. Puis un script permettant d'automatiser les tests de mutations sera mis à disposition, ainsi qu'un dépôt reproduisant l'exemple de la vidéo. Cela offrira aux lecteurs la possibilité de suivre l'exemple, dans l'espoir que ces ressources pratiques faciliteront leur découverte de l'outil.
 
 ## Contexte de la blockchain
 
@@ -68,13 +69,13 @@ Avant d'entrer dans le détail, il est essentiel de rappeler le contexte unique 
 
 Selon un [rapport récent](https://www.chainalysis.com/blog/crypto-hacking-stolen-funds-2024/), en 2023, les fonds dérobés à la suite de hacks ont diminué d'environ 54.3%, pour atteindre 1.7 milliard de dollars. Cependant, le nombre d'incidents de piratage individuels a en fait augmenté, passant de 219 en 2022 à 231 en 2023. Cette augmentation des incidents, malgré une baisse du montant total dérobé, souligne l'importance de renforcer les mesures de sécurité. Si nous aspirons à une adoption massive de la blockchain, une attention particulière doit être portée à la sécurité dès le début du processus de développement.
 
-Pour adresser ces enjeux de sécurité, la communauté s'appuie sur des audits de code, des programmes de bug bounty, et d'autres pratiques rigoureuses dès la conception des contrats. Cependant, ces mesures, bien qu'essentielles, ne suffisent pas toujours à garantir une sécurité à toute épreuve. Il est donc crucial d'adopter une approche proactive et d'intégrer des techniques de sécurité avancées dès les premières étapes de développement des contrats intelligents.
+Pour adresser ces enjeux, la communauté s'appuie sur des audits de code, des programmes de bug bounty, et d'autres pratiques rigoureuses dès la conception des contrats. Cependant, ces mesures, bien qu'essentielles, ne suffisent pas toujours à garantir une sécurité à toute épreuve. Il est donc crucial d'adopter une approche proactive et d'intégrer des techniques de sécurité avancées dès les premières étapes de développement des contrats intelligents.
 
 ## L'Importance des tests dans le développement de smart contracts
 
 ### Exploration des différents types de tests
 
-Afin d'assurer la sécurité et la fiabilité des smart contracts, divers types de tests et pratiques sont employés. Il est important de noter que bien que nous nous concentrions sur le développement de blockchain dans cet article, les concepts et méthodes de test mentionnés ici ont été établis et appliqués dans le domaine du développement logiciel en général depuis longtemps. Ces pratiques transcendent les spécificités de la blockchain et sont fondamentales pour assurer la qualité et la sécurité dans tous les types de développement logiciel. La liste présentée ci-dessous n'est pas exhaustive, mais met en lumière certaines des pratiques et outils de test les plus couramment utilisés dans le développement de blockchain :
+Afin d'assurer la sécurité et la fiabilité des smart contracts, divers types de tests et pratiques sont employés. Il est important de noter que bien que nous nous concentrions sur le développement de blockchain dans cet article, les concepts et méthodes de test mentionnés ici ont été établis et appliqués dans le domaine du développement logiciel en général depuis longtemps. Ces pratiques transcendent les spécificités de la blockchain et sont fondamentales pour assurer la qualité et la sécurité dans tous les types de développement logiciel. La liste présentée ci-dessous n'est pas exhaustive, mais met en lumière certaines des pratiques et outils de test les plus couramment utilisés dans le développement blockchain :
 
 - **Test driven development (TDD) :** Cette méthode encourage la rédaction des tests avant le développement proprement dit de la fonctionnalité. Elle vise à clarifier les objectifs du code dès le départ. En adoptant cette stratégie, le développeur s'engage à façonner le code pour qu'il satisfasse immédiatement aux exigences établies.
 
@@ -117,7 +118,7 @@ La couverture de code, appelée "coverage" en anglais, est la principale métriq
 - Couverture de branche : Elle vérifie si chaque condition dans votre code (par exemple, les instructions if et switch) a été testée dans tous ses résultats possibles (true/false).
 - Couverture de fonction : Elle s'assure que chaque fonction ou méthode dans votre code a été appelée durant les tests.
 
-Le but est d'atteindre une couverture de 100%, ce qui signifierait théoriquement que chaque partie du code a été testée. Mais cela soulève une question importante : est-ce que cette couverture garantit la qualité de nos tests.
+Le but est d'atteindre une couverture de 100%, ce qui signifierait théoriquement que chaque partie du code a été testée. Mais cela soulève une question importante : est-ce que cette couverture garantit la qualité de nos tests?
 
 #### Une Couverture complète signifie-t-elle des tests de qualité ?
 
@@ -137,7 +138,7 @@ Au cœur des tests de mutation se trouve l'idée de "maladie" du code : des modi
 ### Fonctionnement des tests de mutations
 
 Le processus implique la création de "mutants" par modification légère du code original,
-Les mutations appliquées au code peuvent être de différentes formes, dont par exemple :
+Les mutations appliquées au code peuvent être de différentes formes, dont, par exemple :
 
 - La modification de la valeur d’une constante : Par exemple, changer un `const int MAX_VALUE = 10;` en `const int MAX_VALUE = 0;` pour voir si les tests détectent le changement.
 - Le remplacement d’opérateurs : Remplacer, par exemple, un opérateur d'addition (+) par un opérateur de soustraction (-) dans une expression mathématique.
@@ -186,7 +187,7 @@ fonction estEligiblePourInscription(age)
         retourner faux
 ```
 
-Avec cette mutation, la fonction retournerait incorrectement faux pour un utilisateur exactement âgé de 18 ans, violant ainsi la règle d'éligibilité initiale.
+Avec cette mutation, la fonction retournerait incorrectement faux pour un utilisateur exactement âgé de 18 ans, violant ainsi la règle d'éligibilité initiale. Mais le test actuel ne le remarquerait pas., il resterait au vert. On aurait alors un mutant survivant.
 
 Pour détecter cette mutation et s'assurer que la condition d'âge est correctement testée, nous devons ajouter un cas de test spécifique pour l'âge limite :
 
@@ -199,7 +200,7 @@ Ce test supplémentaire permettrait de détecter la mutation introduite et de s'
 
 ## Testez vos tests avec Gambit!
 
-Dans le paysage en constante évolution du développement blockchain, une variété d'outils a été mise au point pour optimiser et sécuriser le processus de création, ainsi, il existe de nombreux outils destinés à faciliter les tests, et concernant les tests de mutation nous pouvons citer : [**Vertigo-rs**](https://github.com/RareSkills/vertigo-rs) maintenu par Jeffrey Scholz de [RareSkills](https://www.rareskills.io/) qui permet de lancer les tests automatiquement mais semble générer, pour le moment, moins de mutations. C'est pourquoi notre attention se porte sur **Gambit**, un outil développé par [Certora](https://www.certora.com/), une entreprise de sécurité fournissant des services d'audit et mettant à disposition une solution de vérifications formelles en plus de Gambit.
+Dans le paysage en constante évolution du développement blockchain, une variété d'outils a été mise au point pour optimiser et sécuriser le processus de création, ainsi, il existe de nombreux outils destinés à faciliter les tests, et concernant les tests de mutation nous pouvons citer : [**Vertigo-rs**](https://github.com/RareSkills/vertigo-rs) maintenu par Jeffrey Scholz de [RareSkills](https://www.rareskills.io/) qui permet de lancer les tests automatiquement mais semble générer, pour le moment, moins de mutations. C'est pourquoi notre attention se porte sur **[Gambit](https://github.com/Certora/gambit)**, un outil développé par [Certora](https://www.certora.com/), une entreprise de sécurité fournissant des services d'audit et mettant à disposition une solution de vérifications formelles en plus de Gambit.
 
 Dans cette section, nous allons résumer l'utilisation de l'outil Gambit pour une prise en main rapide. Nous prendrons délibérément l'exemple de la vidéo mentionnée en introduction, afin que ceux qui le souhaitent puissent suivre et avoir le code sous les yeux. Bien qu'il existe de nombreuses options disponibles dans la [documentation de Gambit](https://github.com/Certora/gambit), nous nous concentrerons sur celles qui permettent une utilisation immédiate et simple.
 
@@ -232,6 +233,13 @@ Une fois les prérequis installés, vous pouvez suivre une des différentes [mé
 
 Cette commande installe Gambit sur votre système et l'ajoute à votre PATH, vous permettant de l'invoquer depuis n'importe quel répertoire.
 
+> <p style="color:yellow;">@todo AJOUTER LE REPO !!! ET LES COMMANDES<p>
+> Je vous propose pour suivre avec exemple video de cloner depot de cet article ou forker et cloner
+
+ou
+
+Afin d'avoir un exemple sur lequel utiliser l'outil je vous invite à cloner le [dépôt cet article](@todo) qui reproduit le code de la vidéo citée en introduction.
+
 ### Création des mutants
 
 Gambit offre deux commandes principales : `mutate` et `summary`. La première génère des mutants, tandis que la seconde fournit un résumé des mutations effectuées. Cet article se penchera sur l'utilisation de mutate. Selon la [documentation de Gambit](https://docs.certora.com/en/latest/docs/gambit/gambit.html#mutation-types), l'outil propose une multitude d'options permettant de spécifier des paramètres nécessaires à solc, de limiter les mutations, et de filtrer les fichiers, contrats, et fonctions à muter. Par défaut, en l'absence d'options spécifiques, Gambit effectuera des mutations sur l'ensemble des fonctions de tous les contrats, en appliquant tous les types de mutations disponibles.
@@ -239,7 +247,7 @@ Gambit offre deux commandes principales : `mutate` et `summary`. La première g�
 Pour une gestion plus efficace et organisée, il est possible d'utiliser un fichier de configuration. Voici un exemple :
 
 ```json
-//myconfig.json
+//gambitconfig.json
 [
   {
     "filename": "/src/Ticketer.sol",
@@ -259,21 +267,21 @@ Pour une gestion plus efficace et organisée, il est possible d'utiliser un fich
 ]
 ```
 
-Chaque entrée dans ce fichier correspond à une spécification pour la mutation d'un fichier donné. Pour un contrat et le chemin vers son fichier vous avez la possibilité de préciser les fonctions à muter, le type de mutations à appliquer, ainsi que des informations spécifiques à solc (comme la version à utiliser et le remapping pour localiser les dépendances).
-Dans l'exemple, seuls les fichiers `Ticketer.sol` et `Blip.sol` seront utilisés pour fabriquer des mutants. Pour `Ticker` toutes les fonctions seront visitées et tout les types de mutations possible seront appliqués. Pour `D` nous spécifions ne vouloir considérer que la fonction `bang` et les mutations de type : `binary-op-mutation`
+Chaque entrée dans ce fichier correspond à une spécification pour effectuer des mutations d'un fichier donné. Pour un contrat et le chemin vers son fichier vous avez la possibilité de préciser les fonctions à muter, le type de mutations à appliquer, ainsi que des informations spécifiques à solc (comme la version à utiliser et le remapping pour localiser les dépendances).
+Dans l'exemple, seuls les fichiers `Ticketer.sol` et `Blip.sol` seront utilisés pour fabriquer des mutants. Pour `Ticketer` toutes les fonctions seront visitées et tout les types de mutations possible seront appliqués. Pour `D` nous spécifions ne vouloir considérer que la fonction `bang` et les mutations de type : `binary-op-mutation`
 et `swap-arguments-operator-mutation`.
 
 Pour appliquer ce fichier de configuration, vous devez utiliser l'option `--json` avec la commande suivante :
 
-`gambit mutate --json ./myconfig.json`
+`gambit mutate --json ./gambitconfig.json`
 
-Cette approche permet une personnalisation avancée de la génération de mutants, s'adaptant à la complexité et aux besoins spécifiques de vos projets de contrats intelligents.
+Cette approche permet une personnalisation avancée de la génération de mutants, s'adaptant à la complexité et aux besoins spécifiques de vos projets.
 
 ### Les Sorties produites par Gambit
 
 Lorsque vous utilisez `Gambit` pour générer des mutants, l'outil crée un dossier `gambit_out` qui sert de répertoire central pour toutes les données générées durant le processus de mutation. Voici un aperçu des éléments clés que vous y trouverez :
 
-- **Dossier mutants/ :** Il contient tous les mutants générés, organisés de manière à refléter l'arborescence du contrat original. Chaque mutant est placé dans un répertoire individuel, nommé d'après son ID de mutant, par exemple, 1, 2, 3, etc. Cette structure facilite l'identification et l'examen de chaque mutation spécifique. Dans chaque fichier Gambit ajoute une ligne de commentaire précisant la mutation qu'il a effectué à l'endroit où il l'a effectué.
+- **Dossier mutants/ :** Il contient tous les mutants générés, organisés de manière à refléter l'arborescence du contrat original. Chaque mutant est placé dans un répertoire individuel, nommé d'après son ID de mutant, par exemple, 1, 2, 3, etc. Cette structure facilite l'identification et l'examen de chaque mutation spécifique. Dans chaque fichier Gambit ajoute une ligne de commentaire précisant la mutation qu'il a effectué à l'endroit où il l'a faite.
 
 - **Fichier mutants.log :** Il fournit un journal de chaque mutation appliquée. Pour chaque entrée, vous trouverez le numéro du mutant (correspondant à son répertoire dans mutants/), le type de mutation réalisée, la valeur d'origine, et la nouvelle valeur post-mutation.
 
@@ -281,7 +289,7 @@ Lorsque vous utilisez `Gambit` pour générer des mutants, l'outil crée un doss
 
 - **Dossier input_json/ :** Contient des fichiers intermédiaires produits par solc qui sont utilisés durant le processus de mutation. Ces fichiers servent de base pour la génération des mutants.
 
-### Limitations des tests de mutation avec Gambit
+### Limitations des tests de mutation
 
 L'une des premières limitations à prendre en compte lors de l'utilisation de tests de mutation, y compris avec Gambit, est la génération de ce que l'on appelle des "mutants équivalents". Ces mutants, bien que modifiés, n'entraînent aucun changement dans le comportement du code. Prenons l'exemple suivant :
 
@@ -298,7 +306,44 @@ Dans cet exemple, une mutation de l'opérateur `==` en `>=` ne modifierait pas l
 
 De plus, il est important de souligner que, compte tenu de la taille et de la complexité du code, l'exécution de tests sur un grand nombre de mutants (disons 1000) pourrait prendre plusieurs heures. Il est donc essentiel de noter que lancer les tests de mutations sur l'ensemble du projet n'est pas une opération que l'on fait toutes les 5 minutes. Cette opération intervient à des moments clés de la phase de tests, nécessitant une planification minutieuse. Concevoir une stratégie pour vos campagnes de tests de mutation, en regroupant ou segmentant les tests, peut réduire la durée totale des tests et simplifier la correction des mutants survivants (gérer des centaines de survivants en même temps peut s'avérer peu pratique).
 
-Bien que les tests de mutation soient généralement conçus pour les tests unitaires, il est possible d'imaginer des stratégies pour les étendre à d'autres types de tests. Cependant, il convient de se demander si cela est véritablement pertinent et efficient dans le cadre de votre projet. Et surtout, il est crucial de prendre en considération le temps que cela nécessitera.
+Même si les tests de mutation sont généralement conçus pour les tests unitaires, il est possible d'imaginer des stratégies pour les étendre à d'autres types de tests. Cependant, il convient de se demander si cela est véritablement pertinent et efficient dans le cadre de votre projet. Et surtout, il est crucial de prendre en considération le temps que cela nécessitera.
+
+## Mise en pratique avec un exemple
+
+Pour ceux parmi vous désireux de mettre en pratique immédiatement les concepts discutés ou simplement d’expérimenter rapidement par eux-mêmes, je vous propose une démarche simple et concrète. Nous allons cloner [dépôt lié à cet article](https://github.com/ibourn/gambit-mutation-testing) qui reproduit l'exemple de la vidéo citée en introduction. Ainsi, vous pourrez suivre le raisonnement de l'article, expérimenter avec du code réel tout en ayant, si besoin, un support vidéo.
+
+Le contrat étudié est un contrat simple de vente de tickets. Il n'y a que 2 tests (ou les tests ne sont pas complets). Il s'agit d'un projet foundry.
+Dans le projet vous trouverez également un script qui est détaillé par la suite.
+
+### Prérequis & Installation :
+
+1. Avant de commencer, assurez-vous d'avoir [Gambit installé](#testez-vos-tests-avec-gambit) sur votre machine.
+
+2. Clonez le dépôt de l'article : `git clone https://github.com/ibourn/gambit-mutation-testing`
+
+3. Naviguez dans le répertoire du projet et exécutez les commandes suivantes pour installer toutes les dépendances nécessaires :
+
+   `cd gambit-mutation-testing`
+
+   `forge install`
+
+   `npm install`
+
+La deuxième commande est utilisée pour installer les dépendances liées à Foundry, la troisième installe les dépendances nécessaires pour les scripts Node.js inclus dans le projet (yargs et colors).
+
+### Application :
+
+Pour lancer la mutation de votre code et explorer les différentes façons dont il peut être modifié (ou "muté"), exécutez la commande suivante :
+
+gambit mutate
+Après l'exécution, vous trouverez un dossier nommé gambit_out dans votre répertoire. Ce dossier contiendra 14 mutants générés par Gambit, chacun représentant une variation de votre code initial.
+
+### Analyse de la Couverture de Code
+
+Pour évaluer la couverture de code de votre exemple, lancez la commande suivante :
+
+forge coverage
+Vous devriez constater une couverture de 100% pour la première colonne de votre rapport de couverture. Bien que cela ne signifie pas que votre test est parfait, une couverture de 100% dans cette colonne est un indicateur positif, suggérant que vos lignes de code sont intégralement testées. Cela représente un excellent point de départ pour assurer la qualité et la sécurité de votre code.
 
 ## Automatisation des tests de mutation avec Foundry
 

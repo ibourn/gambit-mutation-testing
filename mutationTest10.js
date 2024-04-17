@@ -19,7 +19,7 @@ let currentLogFile = ""; //....................... test log file
 /* initialization : yargs options & timer */
 const start = performance.now();
 const argv = yargs(hideBin(process.argv))
-  .option("match-contract", {
+  .option("matchContract", {
     alias: "mc",
     type: "string",
     description: `Filters test contracts by name using a regex pattern. 
@@ -58,13 +58,13 @@ const argv = yargs(hideBin(process.argv))
        Only mutants matching this pattern will be tested.`,
     default: "",
   })
-  .option("isVerbose", {
+  .option("verbose", {
     alias: "v",
     type: "boolean",
     description: `Enables verbose mode, printing more information about the test execution process.`,
     default: false,
   })
-  .option("isDebug", {
+  .option("debug", {
     alias: "d",
     type: "boolean",
     description: `Activates debug mode, saving detailed operation logs and foundry output to a log file.`,
@@ -153,7 +153,7 @@ async function logMessage(
   const finalMessage = `[${timestamp}] ${message}\n`;
   const logMsg = filterAnsiEscapeCodes(finalMessage);
 
-  if (argv.isVerbose || toConsole) {
+  if (argv.verbose || toConsole) {
     console.log(message);
   }
 
@@ -163,7 +163,7 @@ async function logMessage(
     currentLogFile = specialLogFile;
   }
 
-  if (argv.isDebug || toLog) {
+  if (argv.debug || toLog) {
     try {
       await fse.appendFile(currentLogFile, logMsg);
     } catch (error) {
@@ -230,7 +230,7 @@ function formatMutantsList(mutantsList) {
  * @returns {object} {contractOption, noContractOption, testOption, noTestOption}
  */
 function getCommandOptions(argv) {
-  const contractOption = argv["match-contract"]
+  const contractOption = argv.matchContract
     ? `--match-contract "${argv.matchContract}" `
     : "";
   const noContractOption = argv.noMatchContract
@@ -755,7 +755,11 @@ async function main() {
     totalMutantsCount,
     argv.matchMutant
   );
-
+  /* GERER TOUT MutaNT SKIPPPED 
+=> update totatux
+=> creer array de mutant à tester => bcl type for in ou  loop i mais chopper num et non i
+=> remplacer arg commande par initial --x-fin et faire arg["commend"] au lieu de arg.x
+*/
   // iterate over mutants
   for (let i = 1; i <= totalMutantsCount; i++) {
     await logMessage(`Processing mutant ${i}...`);

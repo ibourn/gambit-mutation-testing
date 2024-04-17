@@ -12,3 +12,6 @@ docs/
 
 # Dotenv file
 .env
+
+# Gambit output
+gambit_out/
