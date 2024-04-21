@@ -704,12 +704,12 @@ async function isMutantToSkip(
  */
 async function runForgeTest(mutant, contract, noContract, test, noTest) {
   const matchContract = contract ? `--match-contract ${contract} ` : "";
-  const matchFunc = test ? `--match-test ${test} ` : "";
+  const matchTest = test ? `--match-test ${test} ` : "";
   const noMatchContract = noContract
     ? `--no-match-contract ${noContract} `
     : "";
-  const noMatchFunc = noTest ? `--no-match-test ${noTest} ` : "";
-  const command = `forge test ${matchContract}${matchFunc}${noMatchContract}${noMatchFunc}--fail-fast`;
+  const noMatchTest = noTest ? `--no-match-test ${noTest} ` : "";
+  const command = `forge test ${matchContract}${matchTest}${noMatchContract}${noMatchTest}--fail-fast`;
 
   logMessage(`Running forge test for mutant ${mutant}...`);
   try {
@@ -755,11 +755,7 @@ async function main() {
     totalMutantsCount,
     argv.matchMutant
   );
-  /* GERER TOUT MutaNT SKIPPPED 
-=> update totatux
-=> creer array de mutant à tester => bcl type for in ou  loop i mais chopper num et non i
-=> remplacer arg commande par initial --x-fin et faire arg["commend"] au lieu de arg.x
-*/
+
   // iterate over mutants
   for (let i = 1; i <= totalMutantsCount; i++) {
     await logMessage(`Processing mutant ${i}...`);

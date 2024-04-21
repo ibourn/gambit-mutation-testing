@@ -15,3 +15,6 @@ docs/
 
 # Gambit output
 gambit_out/
+
+# Ignore logs
+testLogs/

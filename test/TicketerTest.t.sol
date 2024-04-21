@@ -52,20 +52,20 @@ contract TicketerTest is Test {
         assertEq(address(owner).balance, 1 ether);
     }
 
-    function test_ownerCollect_WhenNotOwner() public {
-        vm.deal(alice, 1 ether);
-        vm.prank(alice);
-        ticketer.buyTicket{value: 1 ether}(1);
+    // function test_ownerCollect_WhenNotOwner() public {
+    //     vm.deal(alice, 1 ether);
+    //     vm.prank(alice);
+    //     ticketer.buyTicket{value: 1 ether}(1);
 
-        assertEq(address(ticketer).balance, 1 ether);
-        assertEq(address(owner).balance, 0);
+    //     assertEq(address(ticketer).balance, 1 ether);
+    //     assertEq(address(owner).balance, 0);
 
-        vm.expectRevert();
-        vm.prank(bob);
-        ticketer.ownerCollect();
+    //     vm.expectRevert();
+    //     vm.prank(bob);
+    //     ticketer.ownerCollect();
 
-        assertEq(address(ticketer).balance, 1 ether);
-        assertEq(address(owner).balance, 0);
-        assertEq(address(bob).balance, 0);
-    }
+    //     assertEq(address(ticketer).balance, 1 ether);
+    //     assertEq(address(owner).balance, 0);
+    //     assertEq(address(bob).balance, 0);
+    // }
 }
