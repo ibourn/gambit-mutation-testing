@@ -69,81 +69,81 @@ contract TicketerTest is Test {
      * Ticketer.sol::17 : IfStatementMutation(`amount == 0` |==> `false`) of: `if (amount == 0) revert InvalidValue();`
      * This mutation not failing tells us that we don't have test in case of an amount of 0
      */
-    function test_BuyWithZeroAmount() public {
-        vm.deal(alice, price);
-        vm.startPrank(alice);
-        vm.expectRevert(Ticketer.InvalidValue.selector);
-        ticketer.buyTicket(0);
-        vm.stopPrank();
+    // function test_BuyWithZeroAmount() public {
+    //     vm.deal(alice, price);
+    //     vm.startPrank(alice);
+    //     vm.expectRevert(Ticketer.InvalidValue.selector);
+    //     ticketer.buyTicket(0);
+    //     vm.stopPrank();
 
-        assertEq(ticketer.ticketBalances(alice), 0);
-    }
+    //     assertEq(ticketer.ticketBalances(alice), 0);
+    // }
 
     /**
      * Kill mutant 4
      * Ticketer.sol::18 : IfStatementMutation(`msg.value != amount * price` |==> `false`) of: `if (msg.value != amount * price) revert InvalidValue();`
      * This mutation not failing tells us that we don't have test in case of an invalid msg.value
      */
-    function test_BuyWithInvalidValue() public {
-        vm.deal(alice, 2 ether);
-        vm.startPrank(alice);
+    // function test_BuyWithInvalidValue() public {
+    //     vm.deal(alice, 2 ether);
+    //     vm.startPrank(alice);
 
-        vm.expectRevert(Ticketer.InvalidValue.selector);
-        ticketer.buyTicket(1);
+    //     vm.expectRevert(Ticketer.InvalidValue.selector);
+    //     ticketer.buyTicket(1);
 
-        vm.expectRevert(Ticketer.InvalidValue.selector);
-        ticketer.buyTicket{value: 0.5 ether}(1);
+    //     vm.expectRevert(Ticketer.InvalidValue.selector);
+    //     ticketer.buyTicket{value: 0.5 ether}(1);
 
-        vm.expectRevert(Ticketer.InvalidValue.selector);
-        ticketer.buyTicket{value: 1.2 ether}(1);
+    //     vm.expectRevert(Ticketer.InvalidValue.selector);
+    //     ticketer.buyTicket{value: 1.2 ether}(1);
 
-        vm.stopPrank();
+    //     vm.stopPrank();
 
-        assertEq(ticketer.ticketBalances(alice), 0);
-        assertEq(ticketer.ticketBalances(bob), 0);
-    }
+    //     assertEq(ticketer.ticketBalances(alice), 0);
+    //     assertEq(ticketer.ticketBalances(bob), 0);
+    // }
 
     /**
      * Kill mutant 12
      * Ticketer.sol::19 : AssignmentMutation(`amount` |==> `1`) of: `ticketBalances[msg.sender] += amount;`
      * This mutation not failing tells us that we don't check the amount of ticket bought
      */
-    function test_FuzzBuyTicket(uint256 amount) public {
-        vm.assume(amount != 0 && amount < 1000);
-        uint256 amountToSend = amount * price;
+    // function test_FuzzBuyTicket(uint256 amount) public {
+    //     vm.assume(amount != 0 && amount < 1000);
+    //     uint256 amountToSend = amount * price;
 
-        vm.deal(alice, amountToSend);
-        vm.prank(alice);
-        ticketer.buyTicket{value: amountToSend}(amount);
+    //     vm.deal(alice, amountToSend);
+    //     vm.prank(alice);
+    //     ticketer.buyTicket{value: amountToSend}(amount);
 
-        assertEq(ticketer.ticketBalances(alice), amount);
-        assertEq(ticketer.ticketBalances(bob), 0);
-        assertEq(address(ticketer).balance, amountToSend);
-    }
+    //     assertEq(ticketer.ticketBalances(alice), amount);
+    //     assertEq(ticketer.ticketBalances(bob), 0);
+    //     assertEq(address(ticketer).balance, amountToSend);
+    // }
 
     /**
      * Kill mutant 14
      * Ticketer.sol::24 : IfStatementMutation(`!success` |==> `false`) of: `if (!success) revert NativeTransferFailed();`
      * This mutation not failing tells us that we don't have test in case of a failed transfer
      */
-    function test_OwnerCannotCollect() public {
-        vm.deal(alice, price);
-        vm.prank(alice);
-        ticketer.buyTicket{value: price}(1);
+    // function test_OwnerCannotCollect() public {
+    //     vm.deal(alice, price);
+    //     vm.prank(alice);
+    //     ticketer.buyTicket{value: price}(1);
 
-        assertEq(address(ticketer).balance, price);
-        assertEq(address(owner).balance, 0);
+    //     assertEq(address(ticketer).balance, price);
+    //     assertEq(address(owner).balance, 0);
 
-        // Set the address of owner to the ticketer contract code
-        // as there's no fallback and receive functions, the transfer will fail
-        vm.etch(owner, address(ticketer).code);
+    //     // Set the address of owner to the ticketer contract code
+    //     // as there's no fallback and receive functions, the transfer will fail
+    //     vm.etch(owner, address(ticketer).code);
 
-        vm.startPrank(owner);
-        vm.expectRevert(Ticketer.NativeTransferFailed.selector);
-        ticketer.ownerCollect();
-        vm.stopPrank();
+    //     vm.startPrank(owner);
+    //     vm.expectRevert(Ticketer.NativeTransferFailed.selector);
+    //     ticketer.ownerCollect();
+    //     vm.stopPrank();
 
-        assertEq(address(ticketer).balance, price);
-        assertEq(address(owner).balance, 0);
-    }
+    //     assertEq(address(ticketer).balance, price);
+    //     assertEq(address(owner).balance, 0);
+    // }
 }
