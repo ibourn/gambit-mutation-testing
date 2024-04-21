@@ -220,13 +220,6 @@ Une fois les prérequis installés, vous pouvez suivre une des différentes [mé
 
 Cette commande installe Gambit sur votre système et l'ajoute à votre PATH, vous permettant de l'invoquer depuis n'importe quel répertoire.
 
-> <p style="color:yellow;">@todo AJOUTER LE REPO !!! ET LES COMMANDES<p>
-> Je vous propose pour suivre avec exemple video de cloner depot de cet article ou forker et cloner
-
-ou
-
-Afin d'avoir un exemple sur lequel utiliser l'outil je vous invite à cloner le [dépôt cet article](@todo) qui reproduit le code de la vidéo citée en introduction.
-
 ### Création des mutants
 
 Gambit offre deux commandes principales : `mutate` et `summary`. La première génère des mutants, tandis que la seconde fournit un résumé des mutations effectuées. Cet article se penchera sur l'utilisation de mutate. Selon la [documentation de Gambit](https://docs.certora.com/en/latest/docs/gambit/gambit.html#mutation-types), l'outil propose une multitude d'options permettant de spécifier des paramètres nécessaires à solc, de limiter les mutations, et de filtrer les fichiers, contrats, et fonctions à muter. Par défaut, en l'absence d'options spécifiques, Gambit effectuera des mutations sur l'ensemble des fonctions de tous les contrats, en appliquant tous les types de mutations disponibles.
