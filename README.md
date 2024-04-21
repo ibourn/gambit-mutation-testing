@@ -226,8 +226,11 @@ Gambit offre deux commandes principales : `mutate` et `summary`. La première g�
 
 Pour une gestion plus efficace et organisée, il est possible d'utiliser un fichier de configuration. Voici un exemple :
 
+```javascript
+gambitconfig.json;
+```
+
 ```json
-//gambitconfig.json
 [
   {
     "filename": "/src/Ticketer.sol",
@@ -314,7 +317,7 @@ Pour créer les mutations lancer la commande : `gambit mutate --json gambitconfi
 
 Le fichier de config `gambitconfig.json` indique juste le contrat sur lequel effectuer les mutations et précise où chercher les dépendances dans le projet. Il n'y a donc ici aucune restriction sur les types de mutations ou sur le code à muter.
 
-Après l'exécution, vous trouverez un dossier nommé gambit_out dans votre répertoire, comme indiqué précédement. Ce dossier, pour notre exmple, contient 14 mutants générés par Gambit, chacun représentant une variation de votre code initial.
+Après l'exécution, vous trouverez un dossier nommé gambit_out dans votre répertoire, comme indiqué précédemment. Ce dossier, pour notre exmple, contient 14 mutants générés par Gambit, chacun représentant une variation de votre code initial.
 
 ### Analyse de la Couverture de Code :
 
@@ -340,7 +343,7 @@ Pour surmonter cette limitation, l'automatisation à l'aide de scripts peut cons
 
 ### Exemple de script d'automatisation :
 
-Dans le [dépôt cloné précédement](#prérequis-et-installation) vous trouverez le script `mutationTest.js`, si vous souhaitez l'utiliser dans un autre projet, il vous suffit de le [copier](https://github.com/ibourn/gambit-mutation-testing/blob/main/mutationTest10.js) à la racine de votre projet puis d'installer ses dépendances avec : `npm install fs-extra yargs colors`.
+Dans le [dépôt cloné précédemment](#prérequis-et-installation) vous trouverez le script `mutationTest.js`, si vous souhaitez l'utiliser dans un autre projet, il vous suffit de le [copier](https://github.com/ibourn/gambit-mutation-testing/blob/main/mutationTest10.js) à la racine de votre projet puis d'installer ses dépendances avec : `npm install fs-extra yargs colors`.
 
 Le script utilisant la commande `forge test` de Foundry pour lancer les tests, veillez à l'utiliser dans un projet Foundry.
 Il va placer un à un les mutants créés par Gambit dans votre dossier `src` et lancer les tests, puis restaurer vos fichiers originaux.
