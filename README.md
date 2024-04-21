@@ -321,7 +321,16 @@ Après l'exécution, vous trouverez un dossier nommé gambit_out dans votre rép
 Avant d'aller plus loin et afin de comprendre l'utilité des tests de mutations, nous allons évaluer la couverture de nos tests, lancez la commande suivante :
 `forge coverage`
 
-Vous devriez constater une couverture de 100% pour la première colonne de votre rapport de couverture. Bien que cela ne signifie pas que votre test soit parfait ni que toutes les branches soient couvertes, une couverture de 100% dans cette colonne est un indicateur positif, suggérant que vos lignes de code sont intégralement traversées pendant les tests. Ce sera notre point de départ.
+Vous devriez constater une couverture de 100% pour la première colonne de votre rapport de couverture.
+
+```
+| File             | % Lines       | % Statements  | % Branches   | % Funcs       |
+|------------------|---------------|---------------|--------------|---------------|
+| src/Ticketer.sol | 100.00% (5/5) | 70.00% (7/10) | 50.00% (3/6) | 100.00% (2/2) |
+| Total            | 100.00% (5/5) | 70.00% (7/10) | 50.00% (3/6) | 100.00% (2/2) |
+```
+
+Bien que cela ne signifie pas que votre test soit parfait ni que toutes les branches soient couvertes, une couverture de 100% dans cette colonne est un indicateur positif, suggérant que vos lignes de code sont intégralement traversées pendant les tests. Ce sera notre point de départ.
 
 ## Automatisation des tests de mutation avec Foundry
 
@@ -363,30 +372,40 @@ Le terminal affichera la progression des tests, puis un résumé comprenant le n
 Un dossier `testLogs` sera créé et contiendra une copie du résumé ainsi que les logs des tests si l'option --debug est utilisée.
 
 ```
-[**************************************************] 100% Processing mutant: 36
-Tests over mutants run in : 0h 0m 55s 432ms 992µs
+Tests over mutants run in : 0h 0m 35s 340ms
 
-with command : forge test --match-contract SimpleStorage --match-test buy
+with command : forge test
 
-Mutants skipped in 'mutants.log': 16, 18, 26
-Mutants skipped not matching mutant pattern: 27-36
-Mutants skipped due to no matching test pattern: 1-15, 17, 19-25
+Mutants skipped in 'mutants.log': none
+Mutants skipped not matching mutant pattern: none
+Mutants skipped due to no matching test pattern: none
 
-Total of mutants : 36, skipped : 36, tested : 0 of which killed : 0, survived : 0
-Mutation score: N/A.
-No mutant tested!
+Total of mutants : 14, skipped : 0, tested : 14 of which killed : 10, survived : 4
+Mutation score: 71.43%
+Undetected mutants: 2,4,12,14
 ```
 
-Dans le cadre de notre exemple vous devriez obtenir un mutation score de x% et la liste de mutants survivants : ...  
-Cela signifie que des partie du code ne sont pas testés. En effet une modification du code ne fait pas echouer les tests.
+Dans le cadre de notre exemple vous devriez obtenir un mutation score de 71.43% et la liste de mutants survivants : 2,4,12,14
 
 Cela signifie que certaines modifications de notre code n'impliquent aucun changement de comportement de nos tests. Si toutes les lignes semblent être traversées d'après le coverage, nos tests ne sont cependant pas assez efficaces.
 
 Il faut alors les corriger ou en ajouter afin de tuer nos mutants (faire en sorte que les tests echouent en présence de mutations).
 
-Dans le projet clôné, vous trouverez en commentaires des corrections à apporter pour éliminer nos mutants. Si vous voulez voir rapidement l'impact sur les tests de mutations, il vous suffit de commenter le test original et décommentés les corrections dans le fichier de tests.
+Dans notre exemple :
 
-Si vous décommenté toutes les corrections. Vous verrez un mutation score de 100%, vous savez alors que toutes les lignes sont téstés de façon efficaces.
+- le mutant 2 nous indique nous ne testons pas le cas `amount == 0` pour la fonction `buyTicket`
+- le mutant 4 survit car nous ne testons pas une valeur envoyée invalide.
+- le mutant 12 ne fait pas échouer nos tests car nous ne vérifions pas le nombre de ticket achetés.
+- le mutant 14 indique que nous ne testons pas le cas d'un transfert qui échoue dans `ownerCollect`.
+
+Dans le projet clôné, vous trouverez en commentaires des corrections à apporter pour éliminer nos mutants. Si vous voulez voir rapidement l'impact sur les tests de mutations, il vous suffit de décommenter les tests dans le fichier de tests.
+
+Si vous décommentez toutes les corrections. Vous obtiendrez un mutation score de 100%, vous savez alors que toutes les lignes sont téstés de façon plus efficace. Et un nouveau `forge coverage` indiquera également une meilleure couverture :
+
+```
+| src/Ticketer.sol | 100.00% (5/5) | 100.00% (10/10) | 100.00% (6/6) | 100.00% (2/2) |
+| Total            | 100.00% (5/5) | 100.00% (10/10) | 100.00% (6/6) | 100.00% (2/2) |
+```
 
 ## Perspectives futures
 

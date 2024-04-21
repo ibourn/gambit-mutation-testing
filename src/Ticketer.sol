@@ -19,7 +19,7 @@ contract Ticketer is Ownable {
         ticketBalances[msg.sender] += amount;
     }
 
-    function ownerCollect() external {
+    function ownerCollect() external onlyOwner {
         (bool success,) = payable(msg.sender).call{value: address(this).balance}("");
         if (!success) revert NativeTransferFailed();
     }
