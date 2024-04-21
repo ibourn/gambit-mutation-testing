@@ -18,3 +18,6 @@ gambit_out/
 
 # Ignore logs
 testLogs/
+
+# Node modules
+node_modules/
