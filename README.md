@@ -44,7 +44,7 @@
 
 ## Introduction
 
-Vous avez atteint une couverture de test de 100% ? Félicitations ! Mais avez-vous réellement éliminé tous les mutants ? Loin d'être une simple corvée, les tests jouent un rôle crucial dans le développement des applications, y compris des smart contracts. Diverses métriques sont utilisées pour évaluer la qualité de nos tests, cherchant souvent à atteindre une couverture de code totale. Mais cela suffit-il à garantir leur pertinence et leur efficacité ? Une solution existe : tester nos tests pour obtenir une véritable mesure de la qualité de notre arsenal de tests.
+Vous avez atteint une couverture de test de 100% ? Félicitations ! Mais avez-vous réellement éliminé tous les mutants ? En d’autres termes, vos tests sont-ils capables de détecter des altérations délibérées de votre code qui pourraient introduire des erreurs ? Loin d'être une simple corvée, les tests jouent un rôle crucial dans le développement des applications, y compris des smart contracts. Diverses métriques sont utilisées pour évaluer la qualité de nos tests, cherchant souvent à atteindre une couverture de code totale. Mais cela suffit-il à garantir leur pertinence et leur efficacité ? Une solution existe : tester nos tests pour obtenir une véritable mesure de la qualité de notre arsenal de tests.
 
 Récemment, grâce à une [vidéo](https://www.youtube.com/watch?v=HIN8lmj597M) de Owen Thurm, j'ai découvert l'outil [Gambit de Certora](https://github.com/Certora/gambit), qui automatise la génération de mutations pour les contrats écrits en Solidity. Les tests de mutations demeurent largement sous-documentés, notamment dans le domaine de la blockchain, ce qui en fait un sujet méritant d'être davantage exploré et exposé.
 
@@ -60,23 +60,25 @@ Pour adresser ces enjeux, la communauté s'appuie sur des audits de code, des pr
 
 ## L'Importance des tests dans le développement de smart contracts
 
-### Exploration des différents types de tests
+### Exploration de différents types et méthodes de tests
 
-Afin d'assurer la sécurité et la fiabilité des smart contracts, divers types de tests et pratiques sont employés. Il est important de noter que bien que nous nous concentrions sur le développement de blockchain dans cet article, les concepts et méthodes de test mentionnés ici ont été établis et appliqués dans le domaine du développement logiciel en général depuis longtemps. Ces pratiques transcendent les spécificités de la blockchain et sont fondamentales pour assurer la qualité et la sécurité dans tous les types de développement logiciel. La liste présentée ci-dessous n'est pas exhaustive, mais met en lumière certaines des pratiques et outils de test les plus couramment utilisés dans le développement blockchain :
+Afin d'assurer la sécurité et la fiabilité des smart contracts, divers types de tests et pratiques sont employés. Il est important de noter que bien que nous nous concentrions sur le développement blockchain dans cet article, les concepts et méthodes de test mentionnés ici ont été établis et appliqués dans le domaine du développement logiciel en général depuis longtemps. Ces pratiques sont fondamentales pour assurer la qualité et la sécurité dans tous les types de développement logiciel. La liste présentée ci-dessous n'est pas exhaustive, mais met en lumière certaines des pratiques et outils de test les plus couramment utilisés dans le développement blockchain :
 
 - **Test driven development (TDD) :** Cette méthode encourage la rédaction des tests avant le développement proprement dit de la fonctionnalité. Elle vise à clarifier les objectifs du code dès le départ. En adoptant cette stratégie, le développeur s'engage à façonner le code pour qu'il satisfasse immédiatement aux exigences établies.
 
 - **Tests unitaires :** Ils permettent de vérifier l'exécution correcte des plus petites unités d'un smart contract, telles que les fonctions ou méthodes, de manière isolée.
 
-- **Tests d'intégration :** Ces tests visent à évaluer le fonctionnement du smart contract en interaction avec d'autres contrats ou composants du système. Ils permettent de s'assurer que l'ensemble des pièces fonctionne correctement ensemble, simulant des interactions complexes pour détecter d'éventuelles erreurs dans les interfaces ou dans la logique d'intégration.
+- **Tests d'intégration :** Ces tests visent à évaluer le fonctionnement du smart contract en interaction avec d'autres contrats ou composants du système. Ils permettent de s'assurer que l'ensemble des pièces fonctionne correctement ensemble. Imaginez que vous construisez une montre : les tests d'intégration vérifient non seulement que chaque rouage tourne correctement, mais aussi que tous les rouages fonctionnent bien ensemble pour donner l'heure exacte. Ces tests simulent des interactions complexes pour détecter d'éventuelles erreurs dans les interfaces ou dans la logique d'intégration.
 
-- **Le fuzzing :** Cette technique consiste à soumettre le contrat à une multitude d'entrées aléatoires, dans le but de découvrir des comportements inattendus ou des vulnérabilités. Elle permet d'explorer un large éventail de scénarios et de s'assurer de la robustesse du contrat face à des entrées imprévues.
+- **Le fuzzing :** Cette technique consiste à soumettre les fonctions du contrat à une multitude d'entrées aléatoires pour découvrir des comportements inattendus ou des vulnérabilités. Elle permet d'explorer un large éventail de scénarios potentiels et de s'assurer de la robustesse des fonctions face à des entrées imprévues.
 
-- **Tests d'invariants :** Ces tests, catégorie d'une approche plus large qu'est la programmation par contrat, vérifient que certaines propriétés ou règles du contrat restent constantes avant et après l'exécution des transactions, comme la quantité totale de tokens (total supply) devant rester inchangée par exemple. Pour garantir la robustesse de ces invariants sous diverses conditions, on peut utiliser le fuzzing d'état. Cette approche génère des séquences d'appels de fonctions avec des entrées aléatoires tout en conservant les états intermédiaires, simulant ainsi un environnement de test dynamique et imprévisible. Cela permet de tester le contrat de manière exhaustive en couvrant des interactions complexes et des chemins d'exécution qui pourraient rester inexplorés avec des méthodes de test plus traditionnelles, comme si on soumettait le système à une série de tests intensifs pour évaluer sa résilience.
+- **Tests d'invariants :** Ces tests, catégorie d'une approche plus large qu'est la programmation par contrat, vérifient que certaines propriétés ou règles cruciales du contrat restent constantes avant et après l'exécution des transactions, comme la quantité totale de tokens (total supply) devant rester inchangée par exemple. Ces tests aident à assurer que le contrat fonctionne comme prévu sous diverses conditions.
+
+- **Fuzzing d'état (Stateful Fuzzing) :** Cette technique ne se contente pas de tester des entrées aléatoires, mais génère également des séquences aléatoires d'appels de fonctions, tout en conservant les changements d'états intermédiaires. Cela permet de tester le contrat de manière exhaustive, en couvrant des interactions complexes et des chemins d'exécution qui pourraient rester inexplorés avec des méthodes plus traditionnelles. Le fuzzing d'état est ainsi particulièrement utile pour garantir la robustesse des invariants sous diverses conditions et pour évaluer la résilience globale du système.
 
 - **Analyse statique :** Cette méthode examine le code source du contrat sans l'exécuter, en scrutant chaque ligne de code, elle vise à identifier des erreurs de programmation, des failles de sécurité ou des vulnérabilités potentielles. Elle peut révéler des problèmes comme des boucles infinies, des appels de fonctions dangereuses ou des chemins d'exécution qui pourraient mener à un comportement inattendu...
 
-- **Vérification formelle :** Elle se base sur la création d'un modèle mathématique pour représenter le code et vérifier certaines propriétés ou invariants (conditions toujours vraies) pour prouver mathématiquement que le comportement d'un code correspond à nos attentes dans tous les cas possibles.
+- **Vérification formelle :** Elle se base sur la création d'un modèle mathématique pour représenter le code et vérifier certaines propriétés ou invariants (conditions toujours vraies) pour prouver mathématiquement que le comportement d'un code correspond à nos attentes dans tous les cas possibles.  
   L'une des techniques utilisées pour cette vérification s'appelle l'exécution symbolique, c'est la plus répandue dans le developement blockchain. Elle consiste à parcourir tous les chemins possibles dans un programme, en convertissant ces chemins en expressions mathématiques. Ensuite, un solveur d'équations examine ces expressions pour voir si nos propriétés tiennent ou pas. La vérification formelle cherche des preuves mathématiques que nos propriétés sont soit toujours vraies, soit potentiellement fausses.
 
 ### Différents environnements de tests
@@ -99,7 +101,7 @@ Ces différentes étapes permettent de s'assurer que le contrat est robuste et p
 
 Dans le monde du développement blockchain, où la sécurité et la fiabilité sont primordiales, les tests unitaires et le fuzzing représentent le strict minimum pour vérifier l'intégrité des smart contracts. Cependant, au-delà de l'application de ces tests, comment pouvons-nous évaluer la qualité de nos tests ? C'est là que les métriques de test, et plus particulièrement la mesure de la couverture de code, entrent en jeu.
 
-La couverture de code, appelée "coverage" en anglais, est la principale métrique utilisée pour évaluer la qualité des tests automatisés. Elle mesure le pourcentage de votre code qui est exécuté lors de l'exécution de vos tests. Plus précisément, elle peut se décomposer en plusieurs types :
+La couverture de code, appelée "coverage" en anglais, est la principale métrique utilisée pour évaluer les tests automatisés. Elle mesure le pourcentage de votre code qui est exécuté lors de l'exécution de vos tests. Plus précisément, elle peut se décomposer en plusieurs types :
 
 - Couverture de ligne : Ce type mesure si chaque ligne de code dans votre smart contract a été exécutée au moins une fois pendant les tests.
 - Couverture de branche : Elle vérifie si chaque condition dans votre code (par exemple, les instructions if et switch) a été testée dans tous ses résultats possibles (true/false).
@@ -195,10 +197,10 @@ Dans cette section, nous allons résumer l'utilisation de l'outil Gambit pour un
 
 Avant de commencer à utiliser Gambit, vous devez vous assurer que certains outils sont installés sur votre système :
 
-- **Rust**. Gambit étant écrit en Rust, vous devez donc avoir installé [rust](https://www.rust-lang.org/tools/install).
+- **Rust** : Gambit étant écrit en Rust, vous devez donc avoir installé [rust](https://www.rust-lang.org/tools/install).
   Assurez-vous que l'installation a été réalisée avec succès en ouvrant un terminal et en exécutant `rustc --version`.
 
-- **Solc**. Le compilateur Solidity, [solc](https://docs.soliditylang.org/en/latest/installing-solidity.html), est également nécessaire pour la génération des mutants. Vous devez avoir des binaires de solc compatibles avec votre projet aussi afin de gérer différentes versions vous pouvez préférez l'usage de [solc-select](https://github.com/crytic/solc-select).
+- **Solc** : Le compilateur Solidity, [solc](https://docs.soliditylang.org/en/latest/installing-solidity.html), est également nécessaire pour la génération des mutants. Vous devez avoir des binaires de solc compatibles avec votre projet aussi afin de gérer différentes versions vous pouvez préférez l'usage de [solc-select](https://github.com/crytic/solc-select).
   Confirmez l'installation en exécutant `solc --version` dans un terminal.
 
 ### Installation et configuration de Gambit
@@ -211,7 +213,7 @@ Une fois les prérequis installés, vous pouvez suivre une des différentes [mé
   git clone https://github.com/Certora/gambit.git
   ```
 
-- **Puis, installez Gambit avec Cargo.**
+- **Puis, installez Gambit avec Cargo :**
   Naviguez dans le répertoire cloné de Gambit et exécutez la commande suivante :
 
   ```bash
@@ -317,7 +319,7 @@ Pour créer les mutations lancer la commande : `gambit mutate --json gambitconfi
 
 Le fichier de config `gambitconfig.json` indique juste le contrat sur lequel effectuer les mutations et précise où chercher les dépendances dans le projet. Il n'y a donc ici aucune restriction sur les types de mutations ou sur le code à muter.
 
-Après l'exécution, vous trouverez un dossier nommé gambit_out dans votre répertoire, comme indiqué précédemment. Ce dossier, pour notre exmple, contient 14 mutants générés par Gambit, chacun représentant une variation de votre code initial.
+Après l'exécution, vous trouverez un dossier nommé `gambit_out` dans votre répertoire, comme indiqué précédemment. Ce dossier, pour notre exmple, contient 14 mutants générés par Gambit, chacun représentant une variation de votre code initial.
 
 ### Analyse de la Couverture de Code :
 
@@ -433,7 +435,7 @@ En fin de compte, les tests de mutation ne sont pas une fin en soi, mais plutôt
 
 Crédits : [**Igor Bournazel**](https://www.linkedin.com/in/igor-bournazel/)
 
-Merci à [_Franck Maussand_](franck@maussand.net) pour ses suggestions et la relecture de cet article.
+Merci à [_Franck Maussand_](mailto:franck@maussand.net) pour ses suggestions et la relecture de cet article.
 
 ---
 
@@ -494,10 +496,7 @@ Merci à [_Franck Maussand_](franck@maussand.net) pour ses suggestions et la rel
 - [vidéo de présentation de Gambit et Vertigo-rs](https://www.youtube.com/watch?v=HIN8lmj597M)
 - [Gambit](https://github.com/Certora/gambit)
 - [Vertigo-rs](https://github.com/RareSkills/vertigo-rs)
-
 - [Foundry](https://book.getfoundry.sh/getting-started/installation)
-
 - [rust](https://www.rust-lang.org/tools/install)
-
 - [solc](https://docs.soliditylang.org/en/latest/installing-solidity.html)
 - [solc-select](https://github.com/crytic/solc-select)
