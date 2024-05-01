@@ -1,232 +1,228 @@
-# Au-delà de la couverture : Vaincre les mutants cachés dans votre code
+# Beyond Coverage: Defeating Hidden Mutants in Your Code
 
-## Table des matières
+## Table of Contents
 
 - [Introduction](#introduction)
-- [Contexte de la blockchain](#contexte-de-la-blockchain)
-- [L'Importance des tests dans le développement de smart contracts](#limportance-des-tests-dans-le-d%C3%Aveloppement-de-smart-contracts)
-  - [Exploration des différents types de tests](#exploration-des-diff%C3%Arents-types-et_méthodes-de-tests)
-    <!-- - [Test driven development (TDD)](#test-driven-development)
-    - [Tests unitaires](#tests-unitaires)
-    - [Le fuzzing](#le-fuzzing)
-    - [Tests d'invariants](#tests-dinvariants)
-    - [Analyse Statique](#analyse-statique)
-    - [Vérification formelle](#v%C3%Arification-formelle) -->
-  - [Différents environnements de test](#diff%C3%Arents-environnements-de-test)
-  - [Métriques de test dans le développement](#m%C3%Atriques-de-test-dans-le-d%C3%Aveloppement)
-    <!-- - [Qu'est-ce que la couverture de code ?](#quest-ce-que-la-couverture-de-code)
-    - [Une couverture complète signifie-t-elle des tests de qualité ?](#une-couverture-complète-signifie-t-elle-des-tests-de-qualit%C3%A) -->
-- [Les tests de mutations](#les-tests-de-mutations)
-  - [Origine et principe](#origine-et-principe)
-  - [Fonctionnement des tests de mutations](#fonctionnement-des-tests-de-mutations)
-  - [Pourquoi les tests de mutations sont importants ?](#pourquoi-les-tests-de-mutations-sont-importants)
-- [Testez vos tests avec Gambit!](#testez-vos-tests-avec-gambit)
-  - [Prérequis d'installation](#pr%C3%Arequis-dinstallation)
-  - [Installation et configuration de Gambit](#installation-et-configuration-de-gambit)
-  - [Création des mutants](#cr%C3%Aation-des-mutants)
-  - [Les sorties produites par Gambit](#les-sorties-produites-par-gambit)
-  - [Limitations des tests de mutation](#limitations-des-tests-de-mutation-avec-gambit)
-- [Mise en pratique avec un exemple](mise-en-pratique-avec-un-exemple)
-- [Automatisation des tests de mutation avec Foundry](#automatisation-des-tests-de-mutation-avec-foundry)
-  - [Exemple de script d'automatisation](#exemple-de-script-dautomatisation)
-    <!-- - [Options du script](#options-du-script)
-    - [Résultats et logs](#r%C3%Asultats-et-logs) -->
-- [Perspectives futures](#perspectives-futures)
+- [Blockchain Context](#blockchain-context)
+- [The Importance of Testing in Smart Contract Development](#the-importance-of-testing-in-smart-contract-development)
+  - [Exploring Different Types of Tests](#exploring-different-types-of-tests)
+    - [Test Driven Development (TDD)](#test-driven-development)
+    - [Unit Tests](#unit-tests)
+    - [Fuzzing](#fuzzing)
+    - [Invariant Tests](#invariant-tests)
+    - [Static Analysis](#static-analysis)
+    - [Formal Verification](#formal-verification)
+  - [Different Testing Environments](#different-testing-environments)
+  - [Testing Metrics in Development](#testing-metrics-in-development)
+    - [What is Code Coverage?](#what-is-code-coverage)
+    - [Does Complete Coverage Mean Quality Tests?](#does-complete-coverage-mean-quality-tests)
+- [Mutation Testing](#mutation-testing)
+  - [Origin and Principle](#origin-and-principle)
+  - [How Mutation Testing Works](#how-mutation-testing-works)
+  - [Why is Mutation Testing Important?](#why-is-mutation-testing-important)
+- [Test Your Tests with Gambit!](#test-your-tests-with-gambit)
+  - [Installation Prerequisites](#installation-prerequisites)
+  - [Installing and Configuring Gambit](#installing-and-configuring-gambit)
+  - [Creating Mutants](#creating-mutants)
+  - [Outputs Produced by Gambit](#outputs-produced-by-gambit)
+  - [Limitations of Mutation Testing](#limitations-of-mutation-testing)
+- [Putting it into Practice with an Example](#putting-it-into-practice-with-an-example)
+- [Automating Mutation Testing with Foundry](#automating-mutation-testing-with-foundry)
+  - [Example of Automation Script](#example-of-automation-script)
+    - [Script Options](#script-options)
+    - [Results and Logs](#results-and-logs)
+- [Future Perspectives](#future-perspectives)
 - [Conclusion](#conclusion)
 
 ## TL;DR
 
-- Les tests sont essentiels pour assurer la sécurité des smart contracts.
-- Une couverture de test élevée ne garantit pas l'absence de failles.
-- Les tests de mutation évaluent la robustesse de nos tests en introduisant des modifications ciblées dans le code pour voir si elles sont détectées.
-- Gambit se distingue comme un outil précieux pour la réalisation des tests de mutation, en facilitant la création de mutants.
-- Que vous soyez débutant ou expert, l’adoption des tests de mutation peut grandement renforcer la sécurité et la fiabilité de vos contrats.
+- Testing is essential for ensuring the security of smart contracts.
+- High test coverage does not guarantee the absence of flaws.
+- Mutation testing evaluates the robustness of our tests by introducing targeted changes into the code to see if they are detected.
+- Gambit stands out as a valuable tool for conducting mutation testing, facilitating the creation of mutants.
+- Whether you are a beginner or an expert, adopting mutation testing can greatly enhance the security and reliability of your contracts.
 
 ## Introduction
 
-Vous avez atteint une couverture de test de 100% ? Félicitations ! Mais avez-vous réellement éliminé tous les mutants ? En d’autres termes, vos tests sont-ils capables de détecter des altérations délibérées de votre code qui pourraient introduire des erreurs ? Loin d'être une simple corvée, les tests jouent un rôle crucial dans le développement des applications, y compris des smart contracts. Diverses métriques sont utilisées pour évaluer la qualité de nos tests, cherchant souvent à atteindre une couverture de code totale. Mais cela suffit-il à garantir leur pertinence et leur efficacité ? Une solution existe : tester nos tests pour obtenir une véritable mesure de la qualité de notre arsenal de tests.
+Have you achieved 100% test coverage? Congratulations! But have you really eliminated all the mutants? Far from being a mere chore, testing plays a crucial role in the development of applications, including smart contracts. Various metrics are used to assess the quality of our tests, often seeking to achieve total code coverage. But is that enough to guarantee their relevance and effectiveness? There is a solution: testing our tests to get a true measure of the quality of our test arsenal.
 
-Récemment, grâce à une [vidéo](https://www.youtube.com/watch?v=HIN8lmj597M) de Owen Thurm, j'ai découvert l'outil [Gambit de Certora](https://github.com/Certora/gambit), qui automatise la génération de mutations pour les contrats écrits en Solidity. Les tests de mutations demeurent largement sous-documentés, notamment dans le domaine de la blockchain, ce qui en fait un sujet méritant d'être davantage exploré et exposé.
+Recently, thanks to a [video](https://www.youtube.com/watch?v=HIN8lmj597M) by Owen Thurm, I discovered the [Gambit tool by Certora](https://github.com/Certora/gambit), which automates the generation of mutations for contracts written in Solidity. Mutation testing remains largely under-documented, especially in the blockchain field, making it a topic worthy of further exploration and exposure.
 
-Dans la suite de cet article, nous explorerons leur concept et leur utilité dans une suite de tests traditionnelle, avant de présenter un guide pratique pour installer et utiliser Gambit. Puis un script permettant d'automatiser les tests de mutations sera mis à disposition, ainsi qu'un dépôt reproduisant l'exemple de la vidéo. Cela offrira aux lecteurs la possibilité de suivre l'exemple, dans l'espoir que ces ressources pratiques faciliteront leur découverte de l'outil.
+In the remainder of this article, we will explore their concept and usefulness in a traditional test suite, before presenting a practical guide to installing and using Gambit. Then, a script to automate mutation testing will be provided, along with a repository replicating the example from the video. This will give readers the opportunity to follow the example, in the hope that these practical resources will facilitate their discovery of the tool.
 
-## Contexte de la blockchain
+## Blockchain Context
 
-Avant d'entrer dans le détail, il est essentiel de rappeler le contexte unique dans lequel la blockchain opère. Sa principale caractéristique, l'immuabilité, signifie qu'une fois un contrat déployé, il ne peut plus être modifié. Cette permanence rend cruciale la sécurité des contrats déployés, car toute faille ou bug non détecté pourrait être exploité, en particulier dans des secteurs tels que la DeFi, où les motivations financières sont élevées.
+Before delving into the details, it is essential to recall the unique context in which blockchain operates. Its main characteristic, immutability, means that once a contract is deployed, it cannot be changed. This permanence makes the security of deployed contracts crucial, as any undetected flaw or bug could be exploited, particularly in sectors such as DeFi, where financial motivations are high.
 
-Selon un [rapport récent](https://www.chainalysis.com/blog/crypto-hacking-stolen-funds-2024/), en 2023, les fonds dérobés à la suite de hacks ont diminué d'environ 54.3%, pour atteindre 1.7 milliard de dollars. Cependant, le nombre d'incidents de piratage individuels a en fait augmenté, passant de 219 en 2022 à 231 en 2023. Cette augmentation des incidents, malgré une baisse du montant total dérobé, souligne l'importance de renforcer les mesures de sécurité. Si nous aspirons à une adoption massive de la blockchain, une attention particulière doit être portée à la sécurité dès le début du processus de développement.
+According to a [recent report](https://www.chainalysis.com/blog/crypto-hacking-stolen-funds-2024/), in 2023, funds stolen from hacks decreased by about 54.3%, reaching $1.7 billion. However, the number of individual hacking incidents actually increased, from 219 in 2022 to 231 in 2023. This increase in incidents, despite a decrease in the total amount stolen, underscores the importance of strengthening security measures. If we aspire to widespread adoption of blockchain, special attention must be paid to security from the beginning of the development process.
 
-Pour adresser ces enjeux, la communauté s'appuie sur des audits de code, des programmes de bug bounty, et d'autres pratiques rigoureuses dès la conception des contrats. Cependant, ces mesures, bien qu'essentielles, ne suffisent pas toujours à garantir une sécurité à toute épreuve. Il est donc crucial d'adopter une approche proactive et d'intégrer des techniques de sécurité avancées dès les premières étapes de développement des contrats intelligents.
+To address these challenges, the community relies on code audits, bug bounty programs, and other rigorous practices from the design of contracts. However, these measures, although essential, are not always sufficient to guarantee foolproof security. It is therefore crucial to adopt a proactive approach and integrate advanced security techniques from the early stages of smart contract development.
 
-## L'Importance des tests dans le développement de smart contracts
+## The Importance of Testing in Smart Contract Development
 
-### Exploration de différents types et méthodes de tests
+### Exploring Different Types of Tests
 
-Afin d'assurer la sécurité et la fiabilité des smart contracts, divers types de tests et pratiques sont employés. Il est important de noter que bien que nous nous concentrions sur le développement blockchain dans cet article, les concepts et méthodes de test mentionnés ici ont été établis et appliqués dans le domaine du développement logiciel en général depuis longtemps. Ces pratiques sont fondamentales pour assurer la qualité et la sécurité dans tous les types de développement logiciel. La liste présentée ci-dessous n'est pas exhaustive, mais met en lumière certaines des pratiques et outils de test les plus couramment utilisés dans le développement blockchain :
+To ensure the security and reliability of smart contracts, various types of tests and practices are employed. It is important to note that while we focus on blockchain development in this article, the testing concepts and methods mentioned here have been established and applied in the field of software development in general for a long time. These practices transcend the specifics of blockchain and are fundamental to ensuring quality and security in all types of software development. The list below is not exhaustive, but it highlights some of the most commonly used testing practices and tools in blockchain development:
 
-- **Test driven development (TDD) :** Cette méthode encourage la rédaction des tests avant le développement proprement dit de la fonctionnalité. Elle vise à clarifier les objectifs du code dès le départ. En adoptant cette stratégie, le développeur s'engage à façonner le code pour qu'il satisfasse immédiatement aux exigences établies.
+- **Test Driven Development (TDD):** This method encourages writing tests before the actual development of the functionality. It aims to clarify the code's objectives from the start. By adopting this strategy, the developer commits to shaping the code to immediately meet the established requirements.
 
-- **Tests unitaires :** Ils permettent de vérifier l'exécution correcte des plus petites unités d'un smart contract, telles que les fonctions ou méthodes, de manière isolée.
+- **Unit Tests:** They allow for the correct execution of the smallest units of a smart contract, such as functions or methods, to be verified in isolation.
 
-- **Tests d'intégration :** Ces tests visent à évaluer le fonctionnement du smart contract en interaction avec d'autres contrats ou composants du système. Ils permettent de s'assurer que l'ensemble des pièces fonctionne correctement ensemble. Imaginez que vous construisez une montre : les tests d'intégration vérifient non seulement que chaque rouage tourne correctement, mais aussi que tous les rouages fonctionnent bien ensemble pour donner l'heure exacte. Ces tests simulent des interactions complexes pour détecter d'éventuelles erreurs dans les interfaces ou dans la logique d'intégration.
+- **Integration Tests:** These tests aim to evaluate the operation of the smart contract in interaction with other contracts or system components. They ensure that all parts work correctly together, simulating complex interactions to detect potential errors in interfaces or integration logic.
 
-- **Le fuzzing :** Cette technique consiste à soumettre les fonctions du contrat à une multitude d'entrées aléatoires pour découvrir des comportements inattendus ou des vulnérabilités. Elle permet d'explorer un large éventail de scénarios potentiels et de s'assurer de la robustesse des fonctions face à des entrées imprévues.
+- **Fuzzing:** This technique involves subjecting the contract to a multitude of random inputs, with the goal of discovering unexpected behaviors or vulnerabilities. It allows for exploring a wide range of scenarios and ensuring the contract's robustness against unforeseen inputs.
 
-- **Tests d'invariants :** Ces tests, catégorie d'une approche plus large qu'est la programmation par contrat, vérifient que certaines propriétés ou règles cruciales du contrat restent constantes avant et après l'exécution des transactions, comme la quantité totale de tokens (total supply) devant rester inchangée par exemple. Ces tests aident à assurer que le contrat fonctionne comme prévu sous diverses conditions.
+- **Invariant Tests:** These tests, a category of a broader approach known as contract programming, verify that certain properties or rules of the contract remain constant before and after transaction execution, such as the total amount of tokens (total supply) remaining unchanged, for example. To ensure the robustness of these invariants under various conditions, state fuzzing can be used. This approach generates sequences of function calls with random inputs while preserving intermediate states, simulating a dynamic and unpredictable testing environment. This allows for exhaustive testing of the contract by covering complex interactions and execution paths that might remain unexplored with more traditional testing methods, as if subjecting the system to a series of intensive tests to assess its resilience.
 
-- **Fuzzing d'état (Stateful Fuzzing) :** Cette technique ne se contente pas de tester des entrées aléatoires, mais génère également des séquences aléatoires d'appels de fonctions, tout en conservant les changements d'états intermédiaires. Cela permet de tester le contrat de manière exhaustive, en couvrant des interactions complexes et des chemins d'exécution qui pourraient rester inexplorés avec des méthodes plus traditionnelles. Le fuzzing d'état est ainsi particulièrement utile pour garantir la robustesse des invariants sous diverses conditions et pour évaluer la résilience globale du système.
+- **Static Analysis:** This method examines the contract's source code without executing it, scrutinizing each line of code to identify programming errors, security flaws, or potential vulnerabilities. It can reveal issues such as infinite loops, dangerous function calls, or execution paths that could lead to unexpected behavior.
 
-- **Analyse statique :** Cette méthode examine le code source du contrat sans l'exécuter, en scrutant chaque ligne de code, elle vise à identifier des erreurs de programmation, des failles de sécurité ou des vulnérabilités potentielles. Elle peut révéler des problèmes comme des boucles infinies, des appels de fonctions dangereuses ou des chemins d'exécution qui pourraient mener à un comportement inattendu...
+- **Formal Verification:** It is based on creating a mathematical model to represent the code and verify certain properties or invariants (always true conditions) to mathematically prove that the behavior of the code matches our expectations in all possible cases. One of the techniques used for this verification is called symbolic execution, which is the most widespread in blockchain development. It involves traversing all possible paths in a program, converting these paths into mathematical expressions. Then, an equation solver examines these expressions to see if our properties hold or not. Formal verification seeks mathematical proofs that our properties are either always true or potentially false.
 
-- **Vérification formelle :** Elle se base sur la création d'un modèle mathématique pour représenter le code et vérifier certaines propriétés ou invariants pour prouver mathématiquement que le comportement d'un code correspond à nos attentes dans tous les cas possibles. Dans le monde blockchain, la plus répandue des techniques utilisées est l'exécution symbolique. Cette dernière consiste à parcourir tous les chemins possibles dans un programme, en convertissant ces chemins en expressions mathématiques. Ensuite, un solveur d'équations examine ces expressions pour voir si nos propriétés tiennent ou pas. La vérification formelle cherche des preuves mathématiques que nos propriétés sont soit toujours vraies, soit potentiellement fausses.
-  Pour imager cela, imaginons que votre code soit un labyrinthe. Chaque décision, chaque opération et interaction dans le code crée une bifurcation, offrant de multiples chemins possibles. Ces différents chemins sont représentés par des symboles, permettant de les explorer de manière théorique. On peut alors simuler tous les parcours envisageables et s'assurer que le code atteint toujours les résultats attendus.
+### Different Testing Environments
 
-### Différents environnements de tests
+The tests mentioned above are executed in different environments to simulate various usage conditions:
 
-Les tests mentionnés ci-dessus sont exécutés dans différents environnements afin de simuler diverses conditions d'utilisation :
+- **Local:** Tests are first performed locally, on the developer's machine. This allows for testing the code in isolation, in a controlled environment.
 
-- **Local :** Les tests sont d'abord réalisés en local, sur la machine du développeur. Cela permet de tester le code isolément, dans un environnement contrôlé.
+- **Forked Environment:** After local tests, an environment that replicates an existing blockchain is often used. This allows for testing the interactions of the contract with other contracts in a context that simulates reality but without the risks associated with the main blockchain.
 
-- **Forked environment :** Après les tests locaux, on utilise souvent un environnement qui réplique une blockchain existante. Cela permet de tester les interactions du contrat avec d'autres contrats dans un contexte qui simule la réalité, mais sans les risques associés à la blockchain principale.
+- **Testnet:** Contracts are then deployed on a testnet, which is a test blockchain designed to simulate conditions closer to production, including interactions with simulated external entities (mocked).
 
-- **Testnet :** Les contrats sont ensuite déployés sur un testnet, qui est une blockchain de test permettant de simuler des conditions plus proches de la production, y compris les interactions avec des entités extérieures simulées (mocked).
+- **Staging Environment (or "Pre-production"):** Finally, depending on the conditions, a staging environment allows for deploying and testing contracts in conditions almost identical to those of production, including execution times and transaction fees.
 
-- **Staging environment (ou "préproduction") :** Enfin, suivant les conditions, un environnement de staging permet de déployer et de tester les contrats dans des conditions quasi identiques à celles de la production, y compris les temps d'exécution et les frais de transaction.
+These different stages ensure that the contract is robust and ready for production deployment, thus minimizing the risks of errors or vulnerabilities.
 
-Ces différentes étapes permettent de s'assurer que le contrat est robuste et prêt pour le déploiement en production, minimisant ainsi les risques d'erreurs ou de vulnérabilités.
+### Testing Metrics in Development
 
-### Métriques de test dans le développement
+#### What is Code Coverage?
 
-#### Qu'est-ce que la couverture de code ?
+In the world of blockchain development, where security and reliability are paramount, unit tests and fuzzing represent the bare minimum to verify the integrity of smart contracts. However, beyond the application of these tests, how can we assess the quality of our tests? This is where testing metrics, and particularly the measure of code coverage, come into play.
 
-Dans le monde du développement blockchain, où la sécurité et la fiabilité sont primordiales, les tests unitaires et le fuzzing représentent le strict minimum pour vérifier l'intégrité des smart contracts. Cependant, au-delà de l'application de ces tests, comment pouvons-nous évaluer la qualité de nos tests ? C'est là que les métriques de test, et plus particulièrement la mesure de la couverture de code, entrent en jeu.
+Code coverage, often referred to as "coverage" in English, is the primary metric used to evaluate the quality of automated tests. It measures the percentage of your code that is executed during the running of your tests. More specifically, it can be broken down into several types:
 
-La couverture de code, appelée "coverage" en anglais, est la principale métrique utilisée pour évaluer les tests automatisés. Elle mesure le pourcentage de votre code qui est exécuté lors de l'exécution de vos tests. Plus précisément, elle peut se décomposer en plusieurs types :
+- Line coverage: This type measures whether each line of code in your smart contract was executed at least once during the tests.
+- Branch coverage: It checks whether every condition in your code (for example, if and switch statements) has been tested in all its possible outcomes (true/false).
+- Function coverage: It ensures that every function or method in your code was called during the tests.
 
-- Couverture de ligne : Ce type mesure si chaque ligne de code dans votre smart contract a été exécutée au moins une fois pendant les tests.
-- Couverture de branche : Elle vérifie si chaque condition dans votre code (par exemple, les instructions if et switch) a été testée dans tous ses résultats possibles (true/false).
-- Couverture de fonction : Elle s'assure que chaque fonction ou méthode dans votre code a été appelée durant les tests.
+The goal is to achieve 100% coverage, which would theoretically mean that every part of the code has been tested. But this raises an important question: does this coverage guarantee the quality of our tests?
 
-Le but est d'atteindre une couverture de 100%, ce qui signifierait théoriquement que chaque partie du code a été testée. Mais cela soulève une question importante : est-ce que cette couverture garantit la qualité de nos tests?
+#### Does Complete Coverage Mean Quality Tests?
 
-#### Une Couverture complète signifie-t-elle des tests de qualité ?
+Achieving 100% coverage is a commendable goal, but it does not necessarily guarantee that the code is well-tested. Why? Because code coverage measures the quantity of code that is tested, not the quality of the tests themselves. A line of code can be "covered" if it is executed during a test, but that does not mean that the test properly checks the behavior or outcome of that line. In other words, a test can pass over a line of code without detecting incorrect behavior or a security flaw. This is why it is crucial not to rely solely on code coverage as an indicator of test quality. It is also necessary to ensure that the tests are well-designed, that they test the right scenarios, and that they verify the expected behaviors of the code. This is where mutation tests, discussed in the following section, come into play by helping us assess the actual effectiveness of our tests and identify potential blind spots with another metric: the mutation score.
 
-Atteindre une couverture de 100% est un objectif louable, mais cela ne garantit pas nécessairement que le code est bien testé. Pourquoi ? Parce que la couverture de code mesure la quantité du code qui est testée, pas la qualité des tests eux-mêmes. Une ligne de code peut être "couverte" si elle est exécutée lors d'un test, mais cela ne signifie pas que le test vérifie correctement le comportement ou le résultat de cette ligne. Autrement dit, un test peut passer sur une ligne de code sans pour autant détecter un comportement incorrect ou une faille de sécurité.
-C'est pourquoi il est crucial de ne pas se reposer uniquement sur la couverture de code comme indicateur de la qualité des tests. Il faut également s'assurer que les tests sont bien conçus, qu'ils testent les bons scénarios, et qu'ils vérifient les comportements attendus du code. C'est là que les tests de mutations, abordés dans la section suivante, entrent en jeu en nous aidant à évaluer l'efficacité réelle de nos tests et à identifier les potentiels angles morts avec une autre métrique : le mutation score.
+## Mutation Testing
 
-## Les Tests de mutations
+Mutation testing is an advanced method to assess the robustness of unit test suites. By slightly modifying the source code (mutations), this approach checks whether existing tests can detect these changes—essentially, if our tests are sensitive enough to identify potential errors.
 
-Les tests de mutation constituent une méthode avancée pour évaluer la robustesse des suites de tests unitaires. En modifiant légèrement le code source (mutations), cette approche permet de vérifier si les tests existants sont capables de détecter ces changements — autrement dit, si nos tests sont suffisamment sensibles pour identifier des erreurs potentielles.
+### Origin and Principle
 
-### Origine et principe
+Invented in 1971 by Richard Lipton, the technique of mutation testing was designed to measure the effectiveness of tests without the need for additional code writing (or almost none). Over the years, it has established itself as a valuable tool for refining and validating the coverage of unit tests.
 
-Inventée en 1971 par Richard Lipton, la technique des tests de mutation a été conçue pour mesurer l'efficacité des tests sans nécessiter d'écriture de code supplémentaire (ou presque). Au fil des années, elle s'est établie comme un outil précieux pour affiner et valider la couverture des tests unitaires.
+At the heart of mutation testing is the idea of "code sickness": deliberate modifications (mutations) are applied to the source code to create slightly altered versions ("mutants"). The ability of existing tests to detect and fail because of these mutations reveals the effectiveness and completeness of the test suite. In other words, if a mutant survives (i.e., if the tests continue to pass despite the mutation), it indicates a gap in test coverage.
 
-Au cœur des tests de mutation se trouve l'idée de "maladie" du code : des modifications délibérées (mutations) sont appliquées au code source pour créer des versions légèrement altérées ("mutants"). La capacité des tests existants à détecter et à échouer en raison de ces mutations révèle l'efficacité et la complétude de la suite de tests. En d'autres termes, si un mutant survit (c'est-à-dire, si les tests continuent de passer malgré la mutation), cela indique une lacune dans la couverture des tests.
+### How Mutation Testing Works
 
-### Fonctionnement des tests de mutations
+The process involves creating "mutants" by making slight modifications to the original code. The mutations applied to the code can be of different forms, for example:
 
-Le processus implique la création de "mutants" par modification légère du code original,
-Les mutations appliquées au code peuvent être de différentes formes, dont, par exemple :
+- Modifying the value of a constant: For instance, changing `const int MAX_VALUE = 10;` to `const int MAX_VALUE = 0;` to see if the tests detect the change.
+- Replacing operators: For example, replacing an addition operator (+) with a subtraction operator (-) in a mathematical expression.
+- Removing instructions: Such as removing a function call to test the impact of its absence on the program's behavior.
+- Mutating conditions in control statements: This technique involves modifying conditions in control structures, like changing an `if (condition)` to `if (!condition)`, or adjusting a comparator from `<` to `==`, `>`, or `>=`. The goal is to explore and test the code's reaction to all possible forms a condition might take, ensuring that alternative cases are properly handled.
+- Modifying function returns: Changing the return of a function to return a fixed or incorrect value, in order to test the reaction of components that depend on this function.
+- Eliminating branches in conditional structures: Removing an else branch or a case in a switch.
 
-- La modification de la valeur d’une constante : Par exemple, changer un `const int MAX_VALUE = 10;` en `const int MAX_VALUE = 0;` pour voir si les tests détectent le changement.
-- Le remplacement d’opérateurs : Remplacer, par exemple, un opérateur d'addition (+) par un opérateur de soustraction (-) dans une expression mathématique.
-- La suppression d’instructions : Comme retirer un appel de fonction pour tester l'impact de son absence sur le comportement du programme.
-- La mutation des conditions dans les instructions de contrôle : Cette technique consiste à modifier les conditions dans les structures de contrôle, comme transformer un `if (condition)` en `if (!condition)`, ou encore ajuster un comparateur `<` en `==`, `>`, ou `>=`. L'objectif est d'explorer et de tester la réaction du code face à toutes les formes possibles que peut prendre une condition, afin de s'assurer que les cas alternatifs sont correctement gérés.
-- La modification des retours de fonctions : Changer le retour d'une fonction pour retourner une valeur fixe ou incorrecte, afin de tester la réaction des composants qui dépendent de cette fonction.
-- L'élimination de branches dans des structures conditionnelles : Supprimer une branche else ou un cas dans un switch
+Tests are then run on the code one mutation at a time.
 
-Les tests sont alors lancés sur le code avec une mutation à la fois.
+If a test fails because of a mutation, it indicates that our tests have detected the mutation and thus provide good test coverage for that part of the code.
+If the tests still pass despite the code mutations, then they are not sufficient to detect the regression brought about by the mutant. In this case, we talk about surviving mutations. Conversely, if at least one test fails when running the mutated code, then the mutation is said to be killed (implied by the test).
 
-Si un test échoue à cause d'une mutation, cela indique que nos tests ont repéré la mutation et donc une bonne couverture de test pour cette partie du code.
-Si les tests restent au vert malgré les mutations du code, alors ils ne suffisent pas à détecter la régression amenée par le mutant. On parle dans ce cas de mutations survivantes. A l’inverse, si au moins un test passe au rouge lors de l'exécution d’un code muté, alors la mutation est dite tuée (sous entendu par le test).
+### Why is Mutation Testing Important?
 
-### Pourquoi les tests de mutations sont importants ?
+Mutation testing is a powerful tool for assessing the quality of existing tests. By checking whether these tests can detect deliberately introduced errors, it helps identify potential blind spots in the tests or potential bugs in the code. This increases confidence in the tests' ability to effectively cover the code and detect potential errors.
 
-Les tests de mutation sont un outil puissant pour évaluer la qualité des tests existants. En vérifiant si ces tests sont capables de détecter des erreurs délibérément introduites, ils permettent d'identifier d'éventuels angles morts dans les tests ou des bugs potentiels dans le code. Cela accroît la confiance dans la capacité des tests à couvrir efficacement le code et à détecter les erreurs potentielles
-
-**Exemple en pseudo-code :**
-Supposons que nous ayons la fonction suivante pour une illustration très basique :
+**Pseudocode Example:**
+Let's assume we have the following function for a very basic illustration:
 
 ```
-fonction estEligiblePourInscription(age)
-    si age >= 18
-        retourner vrai
-    sinon
-        retourner faux
+function isEligibleForRegistration(age)
+if age >= 18
+return true
+else
+return false
 ```
 
-Et voici un test basique pour cette fonction :
+And here is a basic test for this function:
 
 ```
-test_estEligiblePourInscription()
-    assert(estEligiblePourInscription(20) == vrai)  // Test pour un utilisateur éligible
-    assert(estEligiblePourInscription(16) == faux)  // Test pour un utilisateur non éligible
+test_isEligibleForRegistration()
+assert(isEligibleForRegistration(20) == true) // Test for an eligible user
+assert(isEligibleForRegistration(16) == false) // Test for an ineligible user
 ```
 
-Ce test vérifie si la fonction retourne correctement vrai pour un utilisateur de 20 ans et faux pour un utilisateur de 16 ans.
+This test checks if the function correctly returns true for a 20-year-old user and false for a 16-year-old user.
 
-Supposons que nous introduisions maintenant une mutation très subtile dans la fonction :
-
-```
-fonction estEligiblePourInscription(age)
-    si age > 18  // Mutation : changement de l'opérateur de >= à >
-        retourner vrai
-    sinon
-        retourner faux
-```
-
-Avec cette mutation, la fonction retournerait incorrectement faux pour un utilisateur exactement âgé de 18 ans, violant ainsi la règle d'éligibilité initiale. Mais le test actuel ne le remarquerait pas., il resterait au vert. On aurait alors un mutant survivant.
-
-Pour détecter cette mutation et s'assurer que la condition d'âge est correctement testée, nous devons ajouter un cas de test spécifique pour l'âge limite :
+Suppose we now introduce a very subtle mutation in the function:
 
 ```
-test_estEligiblePourInscription_ageLimite()
-    assert(estEligiblePourInscription(18) == vrai)  // Ce test échouerait avec la fonction mutée
+function isEligibleForRegistration(age)
+if age > 18 // Mutation: changing the operator from >= to >
+return true
+else
+return false
 ```
 
-Ce test supplémentaire permettrait de détecter la mutation introduite et de s'assurer que le cas limite d'un utilisateur âgé de 18 ans est correctement géré par la fonction.
+With this mutation, the function would incorrectly return false for a user exactly aged 18, thus violating the initial eligibility rule. But the current test would not notice it; it would remain green. We would then have a surviving mutant.
 
-## Testez vos tests avec Gambit!
+To detect this mutation and ensure that the age condition is correctly tested, we need to add a specific test case for the age limit:
 
-Dans le paysage en constante évolution du développement blockchain, une variété d'outils a été mise au point pour optimiser et sécuriser le processus de création, ainsi, il existe de nombreux outils destinés à faciliter les tests, et concernant les tests de mutation nous pouvons citer : [**Vertigo-rs**](https://github.com/RareSkills/vertigo-rs) maintenu par Jeffrey Scholz de [RareSkills](https://www.rareskills.io/). D'utilisation plus simple il permet de lancer les tests automatiquement mais semble générer, pour le moment, moins de mutations. C'est pourquoi notre attention se porte sur **[Gambit](https://github.com/Certora/gambit)**, un outil développé par [Certora](https://www.certora.com/), une entreprise de sécurité fournissant des services d'audit et mettant à disposition une solution de vérifications formelles en plus de Gambit.
+```
+test_isEligibleForRegistration_ageLimit()
+assert(isEligibleForRegistration(18) == true) // This test would fail with the mutated function
+```
 
-Dans cette section, nous allons résumer l'utilisation de l'outil Gambit pour une prise en main rapide. Nous prendrons délibérément l'exemple de la vidéo mentionnée en introduction, afin que ceux qui le souhaitent puissent suivre et avoir le code sous les yeux. Bien qu'il existe de nombreuses options disponibles dans la [documentation de Gambit](https://github.com/Certora/gambit), nous nous concentrerons sur celles qui permettent une utilisation immédiate et simple.
+This additional test would help detect the introduced mutation and ensure that the edge case of an 18-year-old user is properly handled by the function.
 
-### Prérequis d'installation
+## Test Your Tests with Gambit!
 
-Avant de commencer à utiliser Gambit, vous devez vous assurer que certains outils sont installés sur votre système :
+In the ever-evolving landscape of blockchain development, a variety of tools have been developed to optimize and secure the creation process. Among these, many tools are designed to facilitate testing, and within the realm of mutation testing, we can mention [**Vertigo-rs**](https://github.com/RareSkills/vertigo-rs) maintained by Jeffrey Scholz of [RareSkills](https://www.rareskills.io/). Simpler to use, it allows automatic test execution but seems to generate fewer mutations for now. That's why our focus is on **[Gambit](https://github.com/Certora/gambit)**, a tool developed by [Certora](https://www.certora.com/), a security company providing audit services and offering a solution for formal verifications in addition to Gambit.
 
-- **Rust** : Gambit étant écrit en Rust, vous devez donc avoir installé [rust](https://www.rust-lang.org/tools/install).
-  Assurez-vous que l'installation a été réalisée avec succès en ouvrant un terminal et en exécutant `rustc --version`.
+In this section, we will summarize the use of the Gambit tool for quick hands-on experience. We will deliberately take the example from the video mentioned in the introduction so that those interested can follow along and have the code in front of them. Although there are many options available in the [Gambit documentation](https://github.com/Certora/gambit), we will focus on those that allow immediate and simple usage.
 
-- **Solc** : Le compilateur Solidity, [solc](https://docs.soliditylang.org/en/latest/installing-solidity.html), est également nécessaire pour la génération des mutants. Vous devez avoir des binaires de solc compatibles avec votre projet aussi afin de gérer différentes versions vous pouvez préférez l'usage de [solc-select](https://github.com/crytic/solc-select).
-  Confirmez l'installation en exécutant `solc --version` dans un terminal.
+### Installation Prerequisites
 
-### Installation et configuration de Gambit
+Before you start using Gambit, you need to ensure that certain tools are installed on your system:
 
-Une fois les prérequis installés, vous pouvez suivre une des différentes [méthodes d'installation](https://github.com/Certora/gambit?tab=readme-ov-file#installation). Nous allons choisir, ici, de cloner le dépôt.
+- **Rust**. As Gambit is written in Rust, you must have [rust](https://www.rust-lang.org/tools/install) installed.
+  Ensure the installation was successful by opening a terminal and running `rustc --version`.
 
-- **Clonez le dépôt de Gambit :**
+- **Solc**. The Solidity compiler, [solc](https://docs.soliditylang.org/en/latest/installing-solidity.html), is also necessary for generating mutants. You should have solc binaries compatible with your project, and to manage different versions, you may prefer using [solc-select](https://github.com/crytic/solc-select).
+  Confirm the installation by running `solc --version` in a terminal.
+
+### Installation and Configuration of Gambit
+
+Once the prerequisites are installed, you can follow one of the various [installation methods](https://github.com/Certora/gambit?tab=readme-ov-file#installation). Here, we will choose to clone the repository.
+
+- **Clone the Gambit repository:**
 
   ```bash
   git clone https://github.com/Certora/gambit.git
+
   ```
 
-- **Puis, installez Gambit avec Cargo :**
-  Naviguez dans le répertoire cloné de Gambit et exécutez la commande suivante :
+- **Then, install Gambit with Cargo:**
+  Navigate to the cloned Gambit directory and run the following command:
 
   ```bash
   cargo install --path .
   ```
 
-Cette commande installe Gambit sur votre système et l'ajoute à votre PATH, vous permettant de l'invoquer depuis n'importe quel répertoire.
+  This command installs Gambit on your system and adds it to your PATH, allowing you to invoke it from any directory.
 
-### Création des mutants
+### Creating Mutants
 
-Gambit offre deux commandes principales : `mutate` et `summary`. La première génère des mutants, tandis que la seconde fournit un résumé des mutations effectuées. Cet article se penchera sur l'utilisation de mutate. Selon la [documentation de Gambit](https://docs.certora.com/en/latest/docs/gambit/gambit.html#mutation-types), l'outil propose une multitude d'options permettant de spécifier des paramètres nécessaires à solc, de limiter les mutations, et de filtrer les fichiers, contrats, et fonctions à muter. Par défaut, en l'absence d'options spécifiques, Gambit effectuera des mutations sur l'ensemble des fonctions de tous les contrats, en appliquant tous les types de mutations disponibles.
+Gambit offers two main commands: `mutate` and `summary`. The former generates mutants, while the latter provides a summary of the mutations performed. This article will focus on using mutate. According to the [Gambit documentation](https://docs.certora.com/en/latest/docs/gambit/gambit.html#mutation-types), the tool offers a multitude of options to specify parameters necessary for solc, limit mutations, and filter files, contracts, and functions to mutate. By default, in the absence of specific options, Gambit will perform mutations on all functions of all contracts, applying all available types of mutations.
 
-Pour une gestion plus efficace et organisée, il est possible d'utiliser un fichier de configuration. Voici un exemple :
+For more efficient and organized management, it is possible to use a configuration file. Here is an example:
 
 ```javascript
 gambitconfig.json;
@@ -252,81 +248,78 @@ gambitconfig.json;
 ]
 ```
 
-Chaque entrée dans ce fichier correspond à une spécification pour effectuer des mutations d'un fichier donné. Pour un contrat et le chemin vers son fichier vous avez la possibilité de préciser les fonctions à muter, le type de mutations à appliquer, ainsi que des informations spécifiques à solc (comme la version à utiliser et le remapping pour localiser les dépendances).
-Dans l'exemple, seuls les fichiers `Ticketer.sol` et `Blip.sol` seront utilisés pour fabriquer des mutants. Pour `Ticketer` toutes les fonctions seront visitées et tout les types de mutations possible seront appliqués. Pour `D` nous spécifions ne vouloir considérer que la fonction `bang` et les mutations de type : `binary-op-mutation`
-et `swap-arguments-operator-mutation`.
+Each entry in this file corresponds to a specification for performing mutations on a given file. For a contract and its file path, you have the option to specify the functions to mutate, the type of mutations to apply, as well as specific solc information (such as the version to use and the remapping to locate dependencies). In the example, only the `Ticketer.sol` and `Blip.sol` files will be used to create mutants. For `Ticketer`, all functions will be visited and all possible types of mutations will be applied. For `D`, we specify that we only want to consider the `bang` function and the mutation types: `binary-op-mutation` and `swap-arguments-operator-mutation`.
 
-Pour appliquer ce fichier de configuration, vous devez utiliser l'option `--json` avec la commande suivante :
+To apply this configuration file, you must use the `--json` option with the following command:
 
 `gambit mutate --json ./gambitconfig.json`
 
-Cette approche permet une personnalisation avancée de la génération de mutants, s'adaptant à la complexité et aux besoins spécifiques de vos projets.
+This approach allows for advanced customization of mutant generation, adapting to the complexity and specific needs of your projects.
 
-### Les Sorties produites par Gambit
+### Outputs Produced by Gambit
 
-Lorsque vous utilisez `Gambit` pour générer des mutants, l'outil crée un dossier `gambit_out` qui sert de répertoire central pour toutes les données générées durant le processus de mutation. Voici un aperçu des éléments clés que vous y trouverez :
+When you use `Gambit` to generate mutants, the tool creates a `gambit_out` folder which serves as a central repository for all data generated during the mutation process. Here is an overview of the key elements you will find:
 
-- **Dossier mutants/ :** Il contient tous les mutants générés, organisés de manière à refléter l'arborescence du contrat original. Chaque mutant est placé dans un répertoire individuel, nommé d'après son ID de mutant, par exemple, 1, 2, 3, etc. Cette structure facilite l'identification et l'examen de chaque mutation spécifique. Dans chaque fichier Gambit ajoute une ligne de commentaire précisant la mutation qu'il a effectué à l'endroit où il l'a faite.
+- **mutants/ folder:** It contains all the generated mutants, organized to reflect the structure of the original contract. Each mutant is placed in an individual directory, named after its mutant ID, for example, 1, 2, 3, etc. This structure facilitates the identification and examination of each specific mutation. In each file, Gambit adds a comment line specifying the mutation it performed at the location it was made.
 
-- **Fichier mutants.log :** Il fournit un journal de chaque mutation appliquée. Pour chaque entrée, vous trouverez le numéro du mutant (correspondant à son répertoire dans mutants/), le type de mutation réalisée, la valeur d'origine, et la nouvelle valeur post-mutation.
+- **mutants.log file:** It provides a log of each applied mutation. For each entry, you will find the mutant's number (corresponding to its directory in mutants/), the type of mutation performed, the original value, and the new value post-mutation.
 
-- **Fichier gambit_results.json :** Un fichier JSON contenant les résultats détaillés de l'opération de mutation. Il s'agit d'une version plus détaillée du log précédent.
+- **gambit_results.json file:** A JSON file containing detailed results of the mutation operation. This is a more detailed version of the previous log.
 
-- **Dossier input_json/ :** Contient des fichiers intermédiaires produits par solc qui sont utilisés durant le processus de mutation. Ces fichiers servent de base pour la génération des mutants.
+- **input_json/ folder:** Contains intermediate files produced by solc that are used during the mutation process. These files serve as a basis for generating the mutants.
 
-### Limitations des tests de mutation
+### Limitations of Mutation Testing
 
-L'une des premières limitations à prendre en compte lors de l'utilisation de tests de mutation, y compris avec Gambit, est la génération de ce que l'on appelle des "mutants équivalents". Ces mutants, bien que modifiés, n'entraînent aucun changement dans le comportement du code. Prenons l'exemple suivant :
+One of the first limitations to consider when using mutation testing, including with Gambit, is the generation of what are called "equivalent mutants." These mutants, although modified, do not lead to any change in the code's behavior. Consider the following example:
 
 ```
 int index = 0;
 while(...) {
-    ...;
-    index++;
-    if (index == 10) break;
+...;
+index++;
+if (index == 10) break;
 }
 ```
 
-Dans cet exemple, une mutation de l'opérateur `==` en `>=` ne modifierait pas le comportement du code. Ces **mutants équivalents** peuvent fausser votre score de mutation, il est donc judicieux de les ignorer. Pour cela, il pourrait être utile de marquer les lignes de mutations considérées comme inutiles.
+In this example, mutating the operator `==` to `>=` would not modify the code's behavior. These **equivalent mutants** can skew your mutation score, so it is wise to ignore them. For this, it might be useful to mark the mutation lines considered as unnecessary.
 
-De plus, il est important de souligner que, compte tenu de la taille et de la complexité du code, l'exécution de tests sur un grand nombre de mutants (disons 1000) pourrait prendre plusieurs heures. Il est donc essentiel de noter que lancer les tests de mutations sur l'ensemble du projet n'est pas une opération que l'on fait toutes les 5 minutes. Cette opération intervient à des moments clés de la phase de tests, nécessitant une planification minutieuse. Concevoir une stratégie pour vos campagnes de tests de mutation, en regroupant ou segmentant les tests, peut réduire la durée totale des tests et simplifier la correction des mutants survivants (gérer des centaines de survivants en même temps peut s'avérer peu pratique).
+Moreover, it is important to note that, given the size and complexity of the code, running tests on a large number of mutants (say 1000) could take several hours. Therefore, it is essential to note that conducting mutation tests on the entire project is not an operation done every 5 minutes. This operation occurs at key moments in the testing phase, requiring careful planning. Designing a strategy for your mutation testing campaigns, by grouping or segmenting tests, can reduce the total duration of tests and simplify the correction of surviving mutants (managing hundreds of survivors at the same time can prove impractical).
 
-Même si les tests de mutation sont généralement conçus pour les tests unitaires, il est possible d'imaginer des stratégies pour les étendre à d'autres types de tests. Cependant, il convient de se demander si cela est véritablement pertinent et efficient dans le cadre de votre projet. Et surtout, il est crucial de prendre en considération le temps que cela nécessitera.
+Although mutation tests are generally designed for unit tests, it is possible to devise strategies to extend them to other types of tests. However, it is worth considering whether this is truly relevant and efficient for your project. And crucially, it is essential to consider the time it will require.
 
-## Mise en pratique avec un exemple
+## Putting it into Practice with an Example
 
-Pour ceux parmi vous désireux d’expérimenter rapidement par eux-mêmes, je vous propose une démarche simple et concrète. Nous allons cloner le [dépôt lié à cet article](https://github.com/ibourn/gambit-mutation-testing) qui reproduit l'exemple de la vidéo citée en introduction. Ainsi, vous pourrez suivre le raisonnement de l'article, expérimenter avec du code réel tout en ayant, si besoin, un support vidéo détaillé.
+For those among you eager to quickly experiment on your own, I propose a simple and concrete approach. We will clone the [repository linked to this article](https://github.com/ibourn/gambit-mutation-testing) which reproduces the example from the video mentioned in the introduction. Thus, you can follow the reasoning of the article, experiment with real code, and have a detailed video support if needed.
 
-Il s'agit d'un projet Foundry avec un contrat basique de vente de tickets. Les tests sont volontairement succints pour la démonstration. Dans le projet, vous trouverez également un script javascript qui est détaillé par la suite.
+This is a Foundry project with a basic ticket sales contract. The tests are intentionally succinct for demonstration purposes. In the project, you will also find a JavaScript script detailed later.
 
-### Prérequis et Installation :
+### Prerequisites and Installation:
 
-1. Avant de commencer, assurez-vous d'avoir [Gambit installé](#testez-vos-tests-avec-gambit) sur votre machine.
+1. Before starting, make sure you have [Gambit installed](#test-your-tests-with-gambit) on your machine.
 
-2. Clonez le dépôt de l'article : `git clone https://github.com/ibourn/gambit-mutation-testing`
+2. Clone the repository of the article: `git clone https://github.com/ibourn/gambit-mutation-testing`
 
-3. Naviguez dans le répertoire du projet : `cd gambit-mutation-testing`
+3. Navigate to the project directory: `cd gambit-mutation-testing`
 
-4. Puis exécutez les commandes suivantes pour installer toutes les dépendances nécessaires :
+4. Then execute the following commands to install all necessary dependencies:
 
-   `forge install` (installe les dépendances liées à Foundry).
+   `forge install` (installs dependencies related to Foundry).
 
-   `npm install` (installe les dépendances nécessaires pour le script).
+   `npm install` (installs dependencies necessary for the script).
 
-### Application :
+### Application:
 
-Pour créer les mutations lancer la commande : `gambit mutate --json gambitconfig.json`
+To create the mutations, run the command: `gambit mutate --json gambitconfig.json`
 
-Le fichier de config `gambitconfig.json` indique juste le contrat sur lequel effectuer les mutations et précise où chercher les dépendances dans le projet. Il n'y a donc ici aucune restriction sur les types de mutations ou sur le code à muter.
+The `gambitconfig.json` file just indicates the contract on which to perform the mutations and specifies where to look for dependencies in the project. Thus, there are no restrictions on the types of mutations or the code to mutate here.
 
-Après l'exécution, vous trouverez un dossier nommé `gambit_out` dans votre répertoire, comme indiqué précédemment. Ce dossier, pour notre exmple, contient 14 mutants générés par Gambit, chacun représentant une variation de votre code initial.
+After execution, you will find a folder named `gambit_out` in your directory, as previously mentioned. This folder, for our example, contains 14 mutants generated by Gambit, each representing a variation of your initial code.
 
-### Analyse de la Couverture de Code :
+### Code Coverage Analysis:
 
-Avant d'aller plus loin et afin de comprendre l'utilité des tests de mutations, nous allons évaluer la couverture de nos tests, lancez la commande suivante :
-`forge coverage`
+Before proceeding further and to understand the usefulness of mutation tests, we will evaluate the coverage of our tests, launch the following command: `forge coverage`
 
-Vous devriez constater une couverture de 100% pour la première colonne de votre rapport de couverture.
+You should see a coverage of 100% for the first column of your coverage report.
 
 ```
 | File             | % Lines       | % Statements  | % Branches   | % Funcs       |
@@ -335,46 +328,46 @@ Vous devriez constater une couverture de 100% pour la première colonne de votre
 | Total            | 100.00% (5/5) | 70.00% (7/10) | 50.00% (3/6) | 100.00% (2/2) |
 ```
 
-Si cela ne signifie pas que votre test soit parfait ni que toutes les branches soient couvertes, une couverture de 100% dans cette colonne est un indicateur positif, suggérant que vos lignes de code sont intégralement traversées pendant les tests. Ce sera notre point de départ.
+Although this does not mean that your test is perfect or that all branches are covered, a 100% coverage in this column is a positive indicator, suggesting that your lines of code are fully traversed during the tests. This will be our starting point.
 
-## Automatisation des tests de mutation avec Foundry
+## Automating Mutation Testing with Foundry
 
-Bien que Gambit soit un outil puissant pour générer des mutants à partir de vos contrats intelligents, à la différence de vertigo-rs, il ne prend pas en charge l'exécution automatique des tests sur ces mutants. Cela signifie que, sans automatisation supplémentaire, l'exécution de tests sur un grand nombre de mutants, en remplaçant les fichiers mutés un à un, peut devenir une tâche fastidieuse et chronophage, particulièrement pour des projets de grande envergure ou complexes.
+Although Gambit is a powerful tool for generating mutants from your smart contracts, unlike vertigo-rs, it does not support automatic execution of tests on these mutants. This means that, without additional automation, executing tests on a large number of mutants, replacing mutated files one by one, can become a tedious and time-consuming task, particularly for large-scale or complex projects.
 
-Pour surmonter cette limitation, l'automatisation à l'aide de scripts peut considérablement faciliter et accélérer le processus.
+To overcome this limitation, automation using scripts can greatly facilitate and speed up the process.
 
-### Exemple de script d'automatisation :
+### Example of an Automation Script:
 
-Dans le [dépôt cloné précédemment](#prérequis-et-installation) vous trouverez le script `mutationTest.js`, si vous souhaitez l'utiliser dans un autre projet, il vous suffit de le [copier](https://github.com/ibourn/gambit-mutation-testing/blob/main/mutationTest10.js) à la racine de votre projet puis d'installer ses dépendances avec : `npm install fs-extra yargs colors`.
+In the [previously cloned repository](#prerequisites-and-installation), you will find the `mutationTest.js` script. If you wish to use it in another project, simply [copy it](https://github.com/ibourn/gambit-mutation-testing/blob/main/mutationTest10.js) to the root of your project and install its dependencies with: `npm install fs-extra yargs colors`.
 
-Le script utilisant la commande `forge test` de Foundry pour lancer les tests, veillez à l'utiliser dans un projet Foundry.
-Il va placer un à un les mutants créés par Gambit dans votre dossier `src` et lancer les tests, puis restaurer vos fichiers originaux.
+The script uses the `forge test` command from Foundry to launch the tests. Make sure to use it in a Foundry project.
+It will place each of the mutants created by Gambit into your `src` folder one by one and launch the tests, then restore your original files.
 
-**Il s'agit d'un simple script de démonstration, aussi ne l'utilisez sur un projet réel qu'après l'avoir étudié afin de vous assurer qu'il convient à vos besoins.** De nombreuses améliorations sont possibles, n'hésitez pas à proposer des suggestions!
+**This is a simple demonstration script, so only use it on a real project after you have studied it to ensure it meets your needs.** Many improvements are possible, so feel free to make suggestions!
 
-#### Options du script pour affiner l'exécution des tests :
+#### Script Options to Refine Test Execution:
 
-- **--help :** Affiche les détails et l'aide sur l'utilisation du script.
-- **--matchContract "<pattern_contract>" :** Permet de spécifier un pattern regex pour sélectionner les contrats de test à utiliser avec l'option `--match-contract` de la commande `forge test`.
-- **--noMatchContract "<pattern_contract>" :** Permet de spécifier un pattern regex pour exclure les contrats de test à utiliser avec l'option `--no-match-contract` de la commande `forge test`.
-- **--matchTest "<pattern_test>" :** Similaire à --matchContract, mais pour filtrer les fonctions de test à exécuter avec l'option `--match-test` de la commande `forge test`.
-- **--noMatchTest "<pattern_test>" :** Similaire à --matchContract, mais pour éxclure les fonctions de test à exécuter avec l'option `--no-match-test` de la commande `forge test`.
-- **--matchMutant "<pattern_source>" :** Filtre les fichiers source mutés, permettant de restreindre les mutants testés sans modifier le fichier de configuration de Gambit. (ex : pour un projet contenant plusieur fichiers dont SimpleStorage.sol pour lequel sont générés 10 mutants, `--matchMutant SimpleStorage` permet de ne tester que ces 10 mutants).
-- **--verbose true :** Affiche en console le détails des opérations effectuées ainsi que les sorties de Foundry.
-- **--debug true :** Copie le détails des opérations effectuées ainsi que les sorties de Foundry dans des logs situés dans le dossier testLogs.
+- **--help :** Displays details and help on using the script.
+- **--matchContract "<pattern_contract>" :** Allows specifying a regex pattern to select test contracts to use with the `--match-contract` option of the `forge test` command.
+- **--noMatchContract "<pattern_contract>" :** Allows specifying a regex pattern to exclude test contracts to use with the `--no-match-contract` option of the `forge test` command.
+- **--matchTest "<pattern_test>" :** Similar to --matchContract, but for filtering test functions to run with the `--match-test` option of the `forge test` command.
+- **--noMatchTest "<pattern_test>" :** Similar to --matchContract, but to exclude test functions to run with the `--no-match-test` option of the `forge test` command.
+- **--matchMutant "<pattern_source>" :** Filters mutated source files, allowing to restrict the mutants tested without modifying the configuration file of Gambit. (e.g., for a project containing several files including SimpleStorage.sol for which 10 mutants are generated, `--matchMutant SimpleStorage` allows testing only these 10 mutants).
+- **--verbose true :** Displays in console the details of operations performed as well as the outputs from Foundry.
+- **--debug true :** Copies the details of operations performed as well as the outputs from Foundry into logs located in the `testLogs` folder.
 
-Par défaut, sans options spécifiques, la commande `forge test` sera lancée pour chaque mutant sur l'ensemble de vos tests.
+By default, without specific options, the `forge test` command will be launched for each mutant on all your tests.
 
-**Astuce :** Pour ignorer des mutants spécifiques, vous pouvez marquer les mutations que vous souhaitez exclure dans le fichier `mutants.log` généré par Gambit, en plaçant un '**-**' devant chaque ligne de mutation. Le script utilisera ce fichier pour identifier les mutants à exclure, ce qui peut être utile pour **ignorer les mutants équivalents**, par exemple.
+**Tip:** To ignore specific mutants, you can mark the mutations you wish to exclude in the `mutants.log` file generated by Gambit, by placing a '**-**' in front of each mutation line. The script will use this file to identify mutants to exclude, which can be useful for **ignoring equivalent mutants**, for example.
 
-#### Résultats et logs :
+#### Results and Logs:
 
-Après avoir [généré les mutants](#création-des-mutants), utilisez la commande suivante dans votre terminal :
+After [generating the mutants](#application), use the following command in your terminal:
 
 `node ./mutationTest.js`
 
-Le terminal affichera la progression des tests, puis un résumé comprenant le nombre total de mutants, le nombre de mutants ignorés (selon vos filtres), le nombre de mutants testés, le nombre de mutants "tués" et le nombre de survivants. Enfin sera indiquée liste des survivants éventuels.  
-Un dossier `testLogs` sera créé et contiendra une copie du résumé ainsi que les logs des tests si l'option --debug est utilisée.
+The terminal will display the progress of the tests, then a summary including the total number of mutants, the number of mutants ignored (according to your filters), the number of mutants tested, the number of mutants "killed", and the number of survivors. Finally, the list of possible survivors will be indicated.  
+A `testLogs` folder will be created and will contain a copy of the summary and the logs of the tests if the --debug option is used.
 
 ```
 Tests over mutants run in : 0h 0m 35s 340ms
@@ -390,65 +383,65 @@ Mutation score: 71.43%
 Undetected mutants: 2,4,12,14
 ```
 
-Dans le cadre de notre exemple vous devriez obtenir un mutation score de 71.43% et la liste de mutants survivants : 2,4,12,14
+In our example, you should obtain a mutation score of 71.43% and a list of surviving mutants: 2, 4, 12, 14.
 
-Cela signifie que certaines modifications de notre code n'impliquent aucun changement de comportement de nos tests. Si toutes les lignes semblent être traversées d'après le coverage, nos tests ne sont cependant pas assez efficaces.
+This indicates that some modifications to our code do not result in any changes in the behavior of our tests. Even though all lines appear to be traversed according to the coverage, our tests are nonetheless not effective enough.
 
-Il faut alors les corriger ou en ajouter afin de tuer nos mutants (faire en sorte que les tests echouent en présence de mutations).
+We then need to correct them or add new ones to kill our mutants (ensure that the tests fail in the presence of mutations).
 
-Dans notre exemple :
+In our example:
 
-- le mutant 2 nous indique nous ne testons pas le cas `amount == 0` pour la fonction `buyTicket`
-- le mutant 4 survit car nous ne testons pas une valeur envoyée invalide.
-- le mutant 12 ne fait pas échouer nos tests car nous ne vérifions pas le nombre de ticket achetés.
-- le mutant 14 indique que nous ne testons pas le cas d'un transfert qui échoue dans `ownerCollect`.
+- Mutant 2 indicates that we do not test the case `amount == 0` for the `buyTicket` function.
+- Mutant 4 survives because we do not test for an invalid sent value.
+- Mutant 12 does not cause our tests to fail because we do not verify the number of tickets purchased.
+- Mutant 14 indicates that we do not test the case of a failed transfer in `ownerCollect`.
 
-Dans le projet clôné, vous trouverez en commentaires des corrections à apporter pour éliminer nos mutants. Si vous voulez voir rapidement l'impact sur les tests de mutations, il vous suffit de décommenter les tests dans le fichier de tests.
+In the cloned project, you will find comments suggesting corrections to eliminate our mutants. If you want to quickly see the impact on mutation tests, simply uncomment the tests in the test file.
 
-Si vous décommentez toutes les corrections. Vous obtiendrez un mutation score de 100%, vous savez alors que toutes les lignes sont téstés de façon plus efficace. Et un nouveau `forge coverage` indiquera également une meilleure couverture :
+If you uncomment all the corrections, you will achieve a mutation score of 100%, indicating that all lines are tested more effectively. A new `forge coverage` will also show improved coverage:
 
 ```
 | src/Ticketer.sol | 100.00% (5/5) | 100.00% (10/10) | 100.00% (6/6) | 100.00% (2/2) |
 | Total            | 100.00% (5/5) | 100.00% (10/10) | 100.00% (6/6) | 100.00% (2/2) |
 ```
 
-## Perspectives futures
+## Future Perspectives
 
-Suivant les tests que vous voulez effectuer et la complexité de votre projet, de multiples ajouts et optimisation peuvent être faites à ce script. Plus globalement quelques pistes d'amélioration pourrait être envisagées :
+Depending on the tests you want to perform and the complexity of your project, multiple additions and optimizations can be made to this script. More broadly, a few improvement paths could be considered:
 
-- Parallélisation des tests de mutants : exécuter des tests sur les mutants en parallèle peut considérablement réduire le temps d'exécution global, à condition de gérer soigneusement l'isolation entre les tests pour éviter toute interférence.
-- Utilisation de l'intelligence artificielle pour prioriser les mutants : Implémenter des algorithmes d'apprentissage automatique pour analyser le code et prioriser les mutants en fonction de leur probabilité d'induire des erreurs pourrait optimiser le processus de test en se concentrant sur les mutations les plus susceptibles d'être significatives.
+- **Parallelization of mutant tests:** Running tests on mutants in parallel can significantly reduce the overall execution time, provided that isolation between tests is carefully managed to prevent any interference.
+- **Use of artificial intelligence to prioritize mutants:** Implementing machine learning algorithms to analyze the code and prioritize mutants based on their likelihood of inducing errors could optimize the testing process by focusing on the mutations most likely to be significant.
 
-Il est à noter qu'il semblerait qu'un travail d'intégration avec foundy se poursuit comme le montre cet [article](https://hackmd.io/@tICezjHsSaiehIn9jbcUAA/SkTEyvuHa).
+It should be noted that work on integration with Foundry seems to be continuing, as shown in this [article](https://hackmd.io/@tICezjHsSaiehIn9jbcUAA/SkTEyvuHa).
 
-L'union des forces de Gambit et Foundry pourrait ouvrir la voie à des outils de test plus robustes et intuitifs, rendant le développement sur Solidity à la fois plus sûr et plus efficace. Restons attentifs aux prochaines mises à jour de ces équipes!
+The union of Gambit and Foundry's forces could pave the way for more robust and intuitive testing tools, making development on Solidity both safer and more efficient. Let's stay tuned for the next updates from these teams!
 
 ## Conclusion
 
-Les tests de mutation représentent une étape supplémentaire dans la validation de la sécurité des contrats intelligents, ajoutant une couche de vérification qui va au-delà des méthodes traditionnelles. En rendant ces tests accessibles, Gambit de Certora joue un rôle significatif dans l'amélioration de nos pratiques de développement blockchain, en mettant un point d'honneur sur la sécurité et la fiabilité du code.
+Mutation testing represents an additional step in validating the security of smart contracts, adding a layer of verification that goes beyond traditional methods. By making these tests accessible, Certora's Gambit plays a significant role in improving our blockchain development practices, with a focus on the security and reliability of the code.
 
-Néanmoins, il est important de reconnaître que la mise en œuvre complète de ces tests peut s'avérer chronophage et exigeante en ressources, particulièrement dans un contexte où les délais sont serrés et les ressources limitées. Il est donc primordial d'adopter une approche pragmatique, en adaptant les stratégies de test aux spécificités de chaque projet. Cela implique de trouver un équilibre entre l'exhaustivité des tests de mutation et l'efficacité du processus de développement, afin d'optimiser le temps consacré à la phase de tests tout en ne compromettant pas la qualité et la sécurité du code.
+Nevertheless, it is important to recognize that the full implementation of these tests can be time-consuming and resource-intensive, particularly in a context where deadlines are tight and resources are limited. Therefore, it is crucial to adopt a pragmatic approach, tailoring testing strategies to the specifics of each project. This involves finding a balance between the comprehensiveness of mutation testing and the efficiency of the development process, to optimize the time dedicated to the testing phase without compromising the quality and security of the code.
 
-En fin de compte, les tests de mutation ne sont pas une fin en soi, mais plutôt un outil parmi d'autres dans l'arsenal du développeur de contrats intelligents, destiné à renforcer la confiance dans la qualité et la sûreté des applications décentralisées. En intégrant judicieusement ces tests dans le cycle de vie du développement, nous pouvons non seulement répondre aux exigences de sécurité les plus strictes mais aussi contribuer à l'avancement des standards de qualité au sein de l'écosystème blockchain.
-
----
-
-Crédits : [**Igor Bournazel**](https://www.linkedin.com/in/igor-bournazel/)
-
-Merci à [_Franck Maussand_](mailto:franck@maussand.net) pour ses suggestions et la relecture de cet article.
+Ultimately, mutation tests are not an end in themselves, but rather one tool among others in the arsenal of the smart contract developer, intended to enhance confidence in the quality and safety of decentralized applications. By judiciously integrating these tests into the development lifecycle, we can not only meet the highest security requirements but also contribute to advancing quality standards within the blockchain ecosystem.
 
 ---
 
-## Ressources / Annexes
+Credits: [**Igor Bournazel**](https://www.linkedin.com/in/igor-bournazel/)
 
-### Fondamentaux du Développement et Test de Logiciels
+Thanks to [_Franck Maussand_](mailto:franck@maussand.net) for his suggestions and review of this article.
 
-- **Développement Piloté par les Tests (TDD) :**
+---
+
+## Resources / Appendices
+
+### Fundamentals of Software Development and Testing
+
+- **Test-Driven Development (TDD):**
 
   - [Guide pratique du TDD en développement web (FR)](https://fr.agilitest.com/blog/practical-guide-to-test-driven-development-tdd-in-web-development)
   - [What Is Test Driven Development (TDD) (GB)](https://www.lambdatest.com/learning-hub/test-driven-development)
 
-- **Tests Unitaires :**
+- **Unit Tests:**
 
   - [Introduction aux tests unitaires (FR)](https://welovedevs.com/fr/articles/tests-unitaires/)
   - [What Is Unit Testing? (GB)](https://builtin.com/software-engineering-perspectives/unit-testing)
@@ -458,45 +451,48 @@ Merci à [_Franck Maussand_](mailto:franck@maussand.net) pour ses suggestions et
   - [Fuzzing sur Wikipedia (FR)](https://fr.wikipedia.org/wiki/Fuzzing)
   - [Fuzz Testing Expliqué (GB)](https://testfully.io/blog/fuzz-testing/)
 
-- **Tests d'Intégration :**
+- **Integration Tests:**
 
   - [Introduction aux tests d'intégration (FR)](https://yogosha.com/fr/blog/test-integration/)
   - [Qu'est-ce que le test d'intégration ? (GB)](https://www.codecademy.com/resources/blog/what-is-integration-testing/)
 
-- **Tests de mutation :**
+- **Mutation Testing:**
 
   - [Mutation Testing : un pas de plus vers la perfection (FR)](https://blog.octo.com/mutation-testing-un-pas-de-plus-vers-la-perfection)
   - [Mutation Testing: Its Concepts With Best Practices (GB)](https://www.lambdatest.com/learning-hub/mutation-testing)
 
-- **Programmation par contrat et invariant :**
+- **Design by contract and Invariants:**
 
   - [La programmation par contrat (FR)](https://fr.wikipedia.org/wiki/Programmation_par_contrat)
   - [Design by contract (GB)](https://en.m.wikipedia.org/wiki/Design_by_contract)
   - [Invariant de boucle (FR)](https://fr.wikipedia.org/wiki/Invariant_de_boucle)
 
-- **Statefull fuzzing et Foundry :**
+- **Stateful Fuzzing and Foundry:**
 
   - [Invariant Testing: Enter the Matrix (GB)](https://medium.com/cyfrin/invariant-testing-enter-the-matrix-c71363dea37e)
   - [Fuzzing et test d'invariants avec Foundry (GB)](https://www.cyfrin.io/blog/smart-contract-fuzzing-and-invariants-testing-foundry)
   - [Invariant Testing en Solidity (GB)](https://www.rareskills.io/post/invariant-testing-solidity)
 
-- **Analyse Statique et Slither :**
+- **Static Analysis and Slither:**
 
   - [Analyse statique de programmes sur Wikipedia (FR)](https://fr.wikipedia.org/wiki/Analyse_statique_de_programmes)
   - [Slither (GB)](https://github.com/crytic/slither)
   - [Qu'est-ce que l'analyse statique ? (GB)](https://www.perforce.com/blog/sca/what-static-analysis)
 
-- **Vérification Formelle :**
+- **Formal Verification:**
   - [Vérification formelle (FR)](https://fr.wikipedia.org/wiki/V%C3%A9rification_formelle)
   - [Vérification formelle des smart contracts (GB)](https://ethereum.org/en/developers/docs/smart-contracts/formal-verification/)
   - [Symbolic Testing with Halmos (GB)](https://a16zcrypto.com/posts/article/symbolic-testing-with-halmos-leveraging-existing-tests-for-formal-verification/)
 
-### Outils et Technologies
+### Tools and Technologies
 
-- [vidéo de présentation de Gambit et Vertigo-rs](https://www.youtube.com/watch?v=HIN8lmj597M)
+- [Gambit and Vertigo-rs presentation video](https://www.youtube.com/watch?v=HIN8lmj597M)
 - [Gambit](https://github.com/Certora/gambit)
 - [Vertigo-rs](https://github.com/RareSkills/vertigo-rs)
+
 - [Foundry](https://book.getfoundry.sh/getting-started/installation)
+
 - [rust](https://www.rust-lang.org/tools/install)
+
 - [solc](https://docs.soliditylang.org/en/latest/installing-solidity.html)
 - [solc-select](https://github.com/crytic/solc-select)
