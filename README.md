@@ -52,7 +52,7 @@ To address these challenges, the community relies on code audits, bug bounty pro
 
 ### Exploring Different Types of Tests
 
-To ensure the security and reliability of smart contracts, various types of tests and practices are employed. It is important to note that while we focus on blockchain development in this article, the testing concepts and methods mentioned here have been established and applied in the field of software development in general for a long time. These practices transcend the specifics of blockchain and are fundamental to ensuring quality and security in all types of software development. The list below is not exhaustive, but it highlights some of the most commonly used testing practices and tools in blockchain development:
+To ensure the security and reliability of smart contracts, various types of tests and practices are employed. It is important to note that while we focus on blockchain development in this article, the testing concepts and methods mentioned here have been established and applied in the field of software development in general for a long time. These practices are fundamental to ensuring quality and security in all types of software development. The list below is not exhaustive, but it highlights some of the most commonly used testing practices in blockchain development:
 
 - **Test Driven Development (TDD):** This method encourages writing tests before the actual development of the functionality. It aims to clarify the code's objectives from the start. By adopting this strategy, the developer commits to shaping the code to immediately meet the established requirements.
 
