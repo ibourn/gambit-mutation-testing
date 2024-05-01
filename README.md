@@ -335,7 +335,7 @@ Vous devriez constater une couverture de 100% pour la première colonne de votre
 | Total            | 100.00% (5/5) | 70.00% (7/10) | 50.00% (3/6) | 100.00% (2/2) |
 ```
 
-Bien que cela ne signifie pas que votre test soit parfait ni que toutes les branches soient couvertes, une couverture de 100% dans cette colonne est un indicateur positif, suggérant que vos lignes de code sont intégralement traversées pendant les tests. Ce sera notre point de départ.
+Si cela ne signifie pas que votre test soit parfait ni que toutes les branches soient couvertes, une couverture de 100% dans cette colonne est un indicateur positif, suggérant que vos lignes de code sont intégralement traversées pendant les tests. Ce sera notre point de départ.
 
 ## Automatisation des tests de mutation avec Foundry
 
