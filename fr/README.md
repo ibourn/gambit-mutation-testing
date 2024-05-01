@@ -50,7 +50,7 @@ Pour adresser ces enjeux, la communauté s'appuie sur des audits de code, des pr
 
 ## L'Importance des tests dans le développement de smart contracts
 
-### Exploration de différents types et méthodes de tests
+### Exploration de différents types et méthodes de tests :
 
 Afin d'assurer la sécurité et la fiabilité des smart contracts, divers types de tests et pratiques sont employés. Il est important de noter que bien que nous nous concentrions sur le développement blockchain dans cet article, les concepts et méthodes de test mentionnés ici ont été établis et appliqués dans le domaine du développement logiciel en général depuis longtemps. Ces pratiques sont fondamentales pour assurer la qualité et la sécurité dans tous les types de développement logiciel. La liste présentée ci-dessous n'est pas exhaustive, mais met en lumière certaines des pratiques de test les plus couramment utilisés dans le développement blockchain :
 
@@ -85,7 +85,7 @@ Les tests mentionnés ci-dessus sont exécutés dans différents environnements 
 
 Ces différentes étapes permettent de s'assurer que le contrat est robuste et prêt pour le déploiement en production, minimisant ainsi les risques d'erreurs ou de vulnérabilités.
 
-### Métriques de test dans le développement
+### Métriques de test dans le développement :
 
 #### Qu'est-ce que la couverture de code ?
 
@@ -108,13 +108,13 @@ C'est pourquoi il est crucial de ne pas se reposer uniquement sur la couverture 
 
 Les tests de mutation constituent une méthode avancée pour évaluer la robustesse des suites de tests unitaires. En modifiant légèrement le code source (mutations), cette approche permet de vérifier si les tests existants sont capables de détecter ces changements — autrement dit, si nos tests sont suffisamment sensibles pour identifier des erreurs potentielles.
 
-### Origine et principe
+### Origine et principe :
 
 Inventée en 1971 par Richard Lipton, la technique des tests de mutation a été conçue pour mesurer l'efficacité des tests sans nécessiter d'écriture de code supplémentaire (ou presque). Au fil des années, elle s'est établie comme un outil précieux pour affiner et valider la couverture des tests unitaires.
 
 Au cœur des tests de mutation se trouve l'idée de "maladie" du code : des modifications délibérées (mutations) sont appliquées au code source pour créer des versions légèrement altérées ("mutants"). La capacité des tests existants à détecter et à échouer en raison de ces mutations révèle l'efficacité et la complétude de la suite de tests. En d'autres termes, si un mutant survit (c'est-à-dire, si les tests continuent de passer malgré la mutation), cela indique une lacune dans la couverture des tests.
 
-### Fonctionnement des tests de mutations
+### Fonctionnement des tests de mutations :
 
 Le processus implique la création de "mutants" par modification légère du code original,
 Les mutations appliquées au code peuvent être de différentes formes, dont, par exemple :
@@ -183,7 +183,7 @@ Dans le paysage en constante évolution du développement blockchain, une varié
 
 Dans cette section, nous allons résumer l'utilisation de l'outil Gambit pour une prise en main rapide. Nous prendrons délibérément l'exemple de la vidéo mentionnée en introduction, afin que ceux qui le souhaitent puissent suivre et avoir le code sous les yeux. Bien qu'il existe de nombreuses options disponibles dans la [documentation de Gambit](https://github.com/Certora/gambit), nous nous concentrerons sur celles qui permettent une utilisation immédiate et simple.
 
-### Prérequis d'installation
+### Prérequis d'installation :
 
 Avant de commencer à utiliser Gambit, vous devez vous assurer que certains outils sont installés sur votre système :
 
@@ -193,7 +193,7 @@ Avant de commencer à utiliser Gambit, vous devez vous assurer que certains outi
 - **Solc** : Le compilateur Solidity, [solc](https://docs.soliditylang.org/en/latest/installing-solidity.html), est également nécessaire pour la génération des mutants. Vous devez avoir des binaires de solc compatibles avec votre projet aussi afin de gérer différentes versions vous pouvez préférez l'usage de [solc-select](https://github.com/crytic/solc-select).
   Confirmez l'installation en exécutant `solc --version` dans un terminal.
 
-### Installation et configuration de Gambit
+### Installation et configuration de Gambit :
 
 Une fois les prérequis installés, vous pouvez suivre une des différentes [méthodes d'installation](https://github.com/Certora/gambit?tab=readme-ov-file#installation). Nous allons choisir, ici, de cloner le dépôt.
 
@@ -252,7 +252,7 @@ Pour appliquer ce fichier de configuration, vous devez utiliser l'option `--json
 
 Cette approche permet une personnalisation avancée de la génération de mutants, s'adaptant à la complexité et aux besoins spécifiques de vos projets.
 
-### Les Sorties produites par Gambit
+### Les Sorties produites par Gambit :
 
 Lorsque vous utilisez `Gambit` pour générer des mutants, l'outil crée un dossier `gambit_out` qui sert de répertoire central pour toutes les données générées durant le processus de mutation. Voici un aperçu des éléments clés que vous y trouverez :
 
@@ -264,7 +264,7 @@ Lorsque vous utilisez `Gambit` pour générer des mutants, l'outil crée un doss
 
 - **Dossier input_json/ :** Contient des fichiers intermédiaires produits par solc qui sont utilisés durant le processus de mutation. Ces fichiers servent de base pour la génération des mutants.
 
-### Limitations des tests de mutation
+### Limitations des tests de mutation :
 
 L'une des premières limitations à prendre en compte lors de l'utilisation de tests de mutation, y compris avec Gambit, est la génération de ce que l'on appelle des "mutants équivalents". Ces mutants, bien que modifiés, n'entraînent aucun changement dans le comportement du code. Prenons l'exemple suivant :
 
@@ -419,7 +419,7 @@ Les tests de mutation représentent une étape supplémentaire dans la validatio
 
 Néanmoins, il est important de reconnaître que la mise en œuvre complète de ces tests peut s'avérer chronophage et exigeante en ressources, particulièrement dans un contexte où les délais sont serrés et les ressources limitées. Il est donc primordial d'adopter une approche pragmatique, en adaptant les stratégies de test aux spécificités de chaque projet. Cela implique de trouver un équilibre entre l'exhaustivité des tests de mutation et l'efficacité du processus de développement, afin d'optimiser le temps consacré à la phase de tests tout en ne compromettant pas la qualité et la sécurité du code.
 
-De la même manière que dans des domaines critiques tels que l'embarqué, le médical, ou la finance, où la moindre défaillance peut avoir des conséquences graves, le développement blockchain requiert une approche méticuleuse et des solutions de test approfondies. À la différence d'applications comme les jeux, où les enjeux sont moins lourds, les contrats intelligents gèrent souvent des montants importants et sont immuables une fois déployés. Cette caractéristique rend les erreurs irréversibles et souligne l'importance de pratiques de test rigoureuses et préventives
+De la même manière que dans des domaines critiques tels que l'embarqué, le médical, ou la finance, où la moindre défaillance peut avoir des conséquences graves, le développement blockchain requiert une approche méticuleuse et des solutions de test approfondies. À la différence d'applications comme les jeux, où les enjeux sont moins lourds, les contrats intelligents gèrent souvent des montants importants et sont immuables une fois déployés. Cette caractéristique rend les erreurs irréversibles et souligne l'importance de pratiques de test rigoureuses et préventives.
 
 En fin de compte, les tests de mutation ne sont pas une fin en soi, mais plutôt un outil parmi d'autres dans l'arsenal du développeur de contrats intelligents, destiné à renforcer la confiance dans la qualité et la sûreté des applications décentralisées. En intégrant judicieusement ces tests dans le cycle de vie du développement, nous pouvons non seulement répondre aux exigences de sécurité les plus strictes mais aussi contribuer à l'avancement des standards de qualité au sein de l'écosystème blockchain.
 
@@ -433,7 +433,7 @@ Merci à [_Franck Maussand_](mailto:franck@maussand.net) pour ses suggestions et
 
 ## Ressources / Annexes
 
-### Fondamentaux du Développement et Test de Logiciels
+### Fondamentaux du Développement et Test de Logiciels :
 
 - **Développement Piloté par les Tests (TDD) :**
 
@@ -483,7 +483,7 @@ Merci à [_Franck Maussand_](mailto:franck@maussand.net) pour ses suggestions et
   - [Vérification formelle des smart contracts (GB)](https://ethereum.org/en/developers/docs/smart-contracts/formal-verification/)
   - [Symbolic Testing with Halmos (GB)](https://a16zcrypto.com/posts/article/symbolic-testing-with-halmos-leveraging-existing-tests-for-formal-verification/)
 
-### Outils et Technologies
+### Outils et Technologies :
 
 - [vidéo de présentation de Gambit et Vertigo-rs](https://www.youtube.com/watch?v=HIN8lmj597M)
 - [Gambit](https://github.com/Certora/gambit)

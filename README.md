@@ -50,7 +50,7 @@ To address these challenges, the community relies on code audits, bug bounty pro
 
 ## The Importance of Testing in Smart Contract Development
 
-### Exploring Different Types of Tests
+### Exploring Different Types of Tests:
 
 To ensure the security and reliability of smart contracts, various types of tests and practices are employed. It is important to note that while we focus on blockchain development in this article, the testing concepts and methods mentioned here have been established and applied in the field of software development in general for a long time. These practices are fundamental to ensuring quality and security in all types of software development. The list below is not exhaustive, but it highlights some of the most commonly used testing practices in blockchain development:
 
@@ -104,13 +104,13 @@ Achieving 100% coverage is a commendable goal, but it does not necessarily guara
 
 Mutation testing is an advanced method to assess the robustness of unit test suites. By slightly modifying the source code (mutations), this approach checks whether existing tests can detect these changes — essentially, if our tests are sensitive enough to identify potential errors.
 
-### Origin and Principle
+### Origin and Principle:
 
 Invented in 1971 by Richard Lipton, the technique of mutation testing was designed to measure the effectiveness of tests without the need for additional code writing (or almost none). Over the years, it has established itself as a valuable tool for refining and validating the coverage of unit tests.
 
 At the heart of mutation testing is the idea of "code sickness": deliberate modifications (mutations) are applied to the source code to create slightly altered versions ("mutants"). The ability of existing tests to detect and fail because of these mutations reveals the effectiveness and completeness of the test suite. In other words, if a mutant survives (i.e., if the tests continue to pass despite the mutation), it indicates a gap in test coverage.
 
-### How Mutation Testing Works
+### How Mutation Testing Works:
 
 The process involves creating "mutants" by making slight modifications to the original code. The mutations applied to the code can be of different forms, for example:
 
@@ -178,7 +178,7 @@ In the ever-evolving landscape of blockchain development, a variety of tools hav
 
 In this section, we will summarize the use of the Gambit tool for quick hands-on experience. We will deliberately take the example from the video mentioned in the introduction so that those interested can follow along and have the code in front of them. Although there are many options available in the [Gambit documentation](https://github.com/Certora/gambit), we will focus on those that allow immediate and simple usage.
 
-### Installation Prerequisites
+### Installation Prerequisites:
 
 Before you start using Gambit, you need to ensure that certain tools are installed on your system:
 
@@ -208,7 +208,7 @@ Once the prerequisites are installed, you can follow one of the various [install
 
   This command installs Gambit on your system and adds it to your PATH, allowing you to invoke it from any directory.
 
-### Creating Mutants
+### Creating Mutants:
 
 Gambit offers two main commands: `mutate` and `summary`. The former generates mutants, while the latter provides a summary of the mutations performed. This article will focus on using mutate. According to the [Gambit documentation](https://docs.certora.com/en/latest/docs/gambit/gambit.html#mutation-types), the tool offers a multitude of options to specify parameters necessary for solc, limit mutations, and filter files, contracts, and functions to mutate. By default, in the absence of specific options, Gambit will perform mutations on all functions of all contracts, applying all available types of mutations.
 
@@ -246,7 +246,7 @@ To apply this configuration file, you must use the `--json` option with the foll
 
 This approach allows for advanced customization of mutant generation, adapting to the complexity and specific needs of your projects.
 
-### Outputs Produced by Gambit
+### Outputs Produced by Gambit:
 
 When you use `Gambit` to generate mutants, the tool creates a `gambit_out` folder which serves as a central repository for all data generated during the mutation process. Here is an overview of the key elements you will find:
 
@@ -258,7 +258,7 @@ When you use `Gambit` to generate mutants, the tool creates a `gambit_out` folde
 
 - **input_json/ folder:** Contains intermediate files produced by solc that are used during the mutation process. These files serve as a basis for generating the mutants.
 
-### Limitations of Mutation Testing
+### Limitations of Mutation Testing:
 
 One of the first limitations to consider when using mutation testing, including with Gambit, is the generation of what are called "equivalent mutants." These mutants, although modified, do not lead to any change in the code's behavior. Consider the following example:
 
@@ -426,7 +426,7 @@ Thanks to [_Franck Maussand_](mailto:franck@maussand.net) for his suggestions an
 
 ## Resources / Appendices
 
-### Fundamentals of Software Development and Testing
+### Fundamentals of Software Development and Testing:
 
 - **Test-Driven Development (TDD):**
 
@@ -476,7 +476,7 @@ Thanks to [_Franck Maussand_](mailto:franck@maussand.net) for his suggestions an
   - [Vérification formelle des smart contracts (GB)](https://ethereum.org/en/developers/docs/smart-contracts/formal-verification/)
   - [Symbolic Testing with Halmos (GB)](https://a16zcrypto.com/posts/article/symbolic-testing-with-halmos-leveraging-existing-tests-for-formal-verification/)
 
-### Tools and Technologies
+### Tools and Technologies:
 
 - [Gambit and Vertigo-rs presentation video](https://www.youtube.com/watch?v=HIN8lmj597M)
 - [Gambit](https://github.com/Certora/gambit)
