@@ -6,16 +6,8 @@
 - [Contexte de la blockchain](#contexte-de-la-blockchain)
 - [L'Importance des tests dans le développement de smart contracts](#limportance-des-tests-dans-le-d%C3%Aveloppement-de-smart-contracts)
   - [Exploration des différents types de tests](#exploration-des-diff%C3%Arents-types-et_méthodes-de-tests)
-    <!-- - [Test driven development (TDD)](#test-driven-development)
-    - [Tests unitaires](#tests-unitaires)
-    - [Le fuzzing](#le-fuzzing)
-    - [Tests d'invariants](#tests-dinvariants)
-    - [Analyse Statique](#analyse-statique)
-    - [Vérification formelle](#v%C3%Arification-formelle) -->
   - [Différents environnements de test](#diff%C3%Arents-environnements-de-test)
   - [Métriques de test dans le développement](#m%C3%Atriques-de-test-dans-le-d%C3%Aveloppement)
-    <!-- - [Qu'est-ce que la couverture de code ?](#quest-ce-que-la-couverture-de-code)
-    - [Une couverture complète signifie-t-elle des tests de qualité ?](#une-couverture-complète-signifie-t-elle-des-tests-de-qualit%C3%A) -->
 - [Les tests de mutations](#les-tests-de-mutations)
   - [Origine et principe](#origine-et-principe)
   - [Fonctionnement des tests de mutations](#fonctionnement-des-tests-de-mutations)
@@ -29,8 +21,6 @@
 - [Mise en pratique avec un exemple](mise-en-pratique-avec-un-exemple)
 - [Automatisation des tests de mutation avec Foundry](#automatisation-des-tests-de-mutation-avec-foundry)
   - [Exemple de script d'automatisation](#exemple-de-script-dautomatisation)
-    <!-- - [Options du script](#options-du-script)
-    - [Résultats et logs](#r%C3%Asultats-et-logs) -->
 - [Perspectives futures](#perspectives-futures)
 - [Conclusion](#conclusion)
 
