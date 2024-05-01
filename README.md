@@ -112,7 +112,7 @@ Achieving 100% coverage is a commendable goal, but it does not necessarily guara
 
 ## Mutation Testing
 
-Mutation testing is an advanced method to assess the robustness of unit test suites. By slightly modifying the source code (mutations), this approach checks whether existing tests can detect these changes—essentially, if our tests are sensitive enough to identify potential errors.
+Mutation testing is an advanced method to assess the robustness of unit test suites. By slightly modifying the source code (mutations), this approach checks whether existing tests can detect these changes — essentially, if our tests are sensitive enough to identify potential errors.
 
 ### Origin and Principle
 
@@ -338,7 +338,7 @@ To overcome this limitation, automation using scripts can greatly facilitate and
 
 ### Example of an Automation Script:
 
-In the [previously cloned repository](#prerequisites-and-installation), you will find the `mutationTest.js` script. If you wish to use it in another project, simply [copy it](https://github.com/ibourn/gambit-mutation-testing/blob/main/mutationTest10.js) to the root of your project and install its dependencies with: `npm install fs-extra yargs colors`.
+In the [previously cloned repository](#prerequisites-and-installation), you will find the `mutationTest.js` script. If you wish to use it in another project, simply [copy it](https://github.com/ibourn/gambit-mutation-testing/blob/main/mutationTest.js) to the root of your project and install its dependencies with: `npm install fs-extra yargs colors`.
 
 The script uses the `forge test` command from Foundry to launch the tests. Make sure to use it in a Foundry project.
 It will place each of the mutants created by Gambit into your `src` folder one by one and launch the tests, then restore your original files.
@@ -421,6 +421,8 @@ The union of Gambit and Foundry's forces could pave the way for more robust and 
 Mutation testing represents an additional step in validating the security of smart contracts, adding a layer of verification that goes beyond traditional methods. By making these tests accessible, Certora's Gambit plays a significant role in improving our blockchain development practices, with a focus on the security and reliability of the code.
 
 Nevertheless, it is important to recognize that the full implementation of these tests can be time-consuming and resource-intensive, particularly in a context where deadlines are tight and resources are limited. Therefore, it is crucial to adopt a pragmatic approach, tailoring testing strategies to the specifics of each project. This involves finding a balance between the comprehensiveness of mutation testing and the efficiency of the development process, to optimize the time dedicated to the testing phase without compromising the quality and security of the code.
+
+Just as in critical fields such as embedded systems, healthcare, or finance, where even minor failures can have serious consequences, blockchain development requires a meticulous approach and comprehensive testing solutions. Unlike applications like games, where the stakes are lower, smart contracts often manage significant amounts and are immutable once deployed. This characteristic makes errors irreversible and underscores the importance of rigorous and preventative testing practices.
 
 Ultimately, mutation tests are not an end in themselves, but rather one tool among others in the arsenal of the smart contract developer, intended to enhance confidence in the quality and safety of decentralized applications. By judiciously integrating these tests into the development lifecycle, we can not only meet the highest security requirements but also contribute to advancing quality standards within the blockchain ecosystem.
 

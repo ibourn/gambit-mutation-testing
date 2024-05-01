@@ -345,7 +345,7 @@ Pour surmonter cette limitation, l'automatisation à l'aide de scripts peut cons
 
 ### Exemple de script d'automatisation :
 
-Dans le [dépôt cloné précédemment](#prérequis-et-installation) vous trouverez le script `mutationTest.js`, si vous souhaitez l'utiliser dans un autre projet, il vous suffit de le [copier](https://github.com/ibourn/gambit-mutation-testing/blob/main/mutationTest10.js) à la racine de votre projet puis d'installer ses dépendances avec : `npm install fs-extra yargs colors`.
+Dans le [dépôt cloné précédemment](#prérequis-et-installation) vous trouverez le script `mutationTest.js`, si vous souhaitez l'utiliser dans un autre projet, il vous suffit de le [copier](https://github.com/ibourn/gambit-mutation-testing/blob/main/mutationTest.js) à la racine de votre projet puis d'installer ses dépendances avec : `npm install fs-extra yargs colors`.
 
 Le script utilisant la commande `forge test` de Foundry pour lancer les tests, veillez à l'utiliser dans un projet Foundry.
 Il va placer un à un les mutants créés par Gambit dans votre dossier `src` et lancer les tests, puis restaurer vos fichiers originaux.
@@ -361,7 +361,7 @@ Il va placer un à un les mutants créés par Gambit dans votre dossier `src` et
 - **--noMatchTest "<pattern_test>" :** Similaire à --matchContract, mais pour éxclure les fonctions de test à exécuter avec l'option `--no-match-test` de la commande `forge test`.
 - **--matchMutant "<pattern_source>" :** Filtre les fichiers source mutés, permettant de restreindre les mutants testés sans modifier le fichier de configuration de Gambit. (ex : pour un projet contenant plusieur fichiers dont SimpleStorage.sol pour lequel sont générés 10 mutants, `--matchMutant SimpleStorage` permet de ne tester que ces 10 mutants).
 - **--verbose true :** Affiche en console le détails des opérations effectuées ainsi que les sorties de Foundry.
-- **--debug true :** Copie le détails des opérations effectuées ainsi que les sorties de Foundry dans des logs situés dans le dossier testLogs.
+- **--debug true :** Copie le détails des opérations effectuées ainsi que les sorties de Foundry dans des logs situés dans le dossier `testLogs`.
 
 Par défaut, sans options spécifiques, la commande `forge test` sera lancée pour chaque mutant sur l'ensemble de vos tests.
 
@@ -428,6 +428,8 @@ L'union des forces de Gambit et Foundry pourrait ouvrir la voie à des outils de
 Les tests de mutation représentent une étape supplémentaire dans la validation de la sécurité des contrats intelligents, ajoutant une couche de vérification qui va au-delà des méthodes traditionnelles. En rendant ces tests accessibles, Gambit de Certora joue un rôle significatif dans l'amélioration de nos pratiques de développement blockchain, en mettant un point d'honneur sur la sécurité et la fiabilité du code.
 
 Néanmoins, il est important de reconnaître que la mise en œuvre complète de ces tests peut s'avérer chronophage et exigeante en ressources, particulièrement dans un contexte où les délais sont serrés et les ressources limitées. Il est donc primordial d'adopter une approche pragmatique, en adaptant les stratégies de test aux spécificités de chaque projet. Cela implique de trouver un équilibre entre l'exhaustivité des tests de mutation et l'efficacité du processus de développement, afin d'optimiser le temps consacré à la phase de tests tout en ne compromettant pas la qualité et la sécurité du code.
+
+De la même manière que dans des domaines critiques tels que l'embarqué, le médical, ou la finance, où la moindre défaillance peut avoir des conséquences graves, le développement blockchain requiert une approche méticuleuse et des solutions de test approfondies. À la différence d'applications comme les jeux, où les enjeux sont moins lourds, les contrats intelligents gèrent souvent des montants importants et sont immuables une fois déployés. Cette caractéristique rend les erreurs irréversibles et souligne l'importance de pratiques de test rigoureuses et préventives
 
 En fin de compte, les tests de mutation ne sont pas une fin en soi, mais plutôt un outil parmi d'autres dans l'arsenal du développeur de contrats intelligents, destiné à renforcer la confiance dans la qualité et la sûreté des applications décentralisées. En intégrant judicieusement ces tests dans le cycle de vie du développement, nous pouvons non seulement répondre aux exigences de sécurité les plus strictes mais aussi contribuer à l'avancement des standards de qualité au sein de l'écosystème blockchain.
 
