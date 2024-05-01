@@ -4,33 +4,33 @@
 
 - [Introduction](#introduction)
 - [Contexte de la blockchain](#contexte-de-la-blockchain)
-- [L'Importance des tests dans le développement de smart contracts](#limportance-des-tests-dans-le-développement-de-smart-contracts)
-  - [Exploration des différents types de tests](#exploration-des-différents-types-de-tests)
-    - [Test driven development (TDD)](#test-driven-development)
+- [L'Importance des tests dans le développement de smart contracts](#limportance-des-tests-dans-le-d%C3%Aveloppement-de-smart-contracts)
+  - [Exploration des différents types de tests](#exploration-des-diff%C3%Arents-types-et_méthodes-de-tests)
+    <!-- - [Test driven development (TDD)](#test-driven-development)
     - [Tests unitaires](#tests-unitaires)
     - [Le fuzzing](#le-fuzzing)
     - [Tests d'invariants](#tests-dinvariants)
     - [Analyse Statique](#analyse-statique)
-    - [Vérification formelle](#vérification-formelle)
-  - [Différents environnements de test](#différents-environnements-de-test)
-  - [Métriques de test dans le développement](#mc3a9triques-de-test-dans-le-dc3a9veloppement)
-    - [Qu'est-ce que la couverture de code ?](#quest-ce-que-la-couverture-de-code)
-    - [Une couverture complète signifie-t-elle des tests de qualité ?](#une-couverture-complète-signifie-t-elle-des-tests-de-qualité)
+    - [Vérification formelle](#v%C3%Arification-formelle) -->
+  - [Différents environnements de test](#diff%C3%Arents-environnements-de-test)
+  - [Métriques de test dans le développement](#m%C3%Atriques-de-test-dans-le-d%C3%Aveloppement)
+    <!-- - [Qu'est-ce que la couverture de code ?](#quest-ce-que-la-couverture-de-code)
+    - [Une couverture complète signifie-t-elle des tests de qualité ?](#une-couverture-complète-signifie-t-elle-des-tests-de-qualit%C3%A) -->
 - [Les tests de mutations](#les-tests-de-mutations)
   - [Origine et principe](#origine-et-principe)
   - [Fonctionnement des tests de mutations](#fonctionnement-des-tests-de-mutations)
   - [Pourquoi les tests de mutations sont importants ?](#pourquoi-les-tests-de-mutations-sont-importants)
 - [Testez vos tests avec Gambit!](#testez-vos-tests-avec-gambit)
-  - [Prérequis d'installation](#prérequis-dinstallation)
+  - [Prérequis d'installation](#pr%C3%Arequis-dinstallation)
   - [Installation et configuration de Gambit](#installation-et-configuration-de-gambit)
-  - [Création des mutants](#création-des-mutants)
+  - [Création des mutants](#cr%C3%Aation-des-mutants)
   - [Les sorties produites par Gambit](#les-sorties-produites-par-gambit)
   - [Limitations des tests de mutation](#limitations-des-tests-de-mutation-avec-gambit)
 - [Mise en pratique avec un exemple](mise-en-pratique-avec-un-exemple)
 - [Automatisation des tests de mutation avec Foundry](#automatisation-des-tests-de-mutation-avec-foundry)
   - [Exemple de script d'automatisation](#exemple-de-script-dautomatisation)
-    - [Options du script](#options-du-script)
-    - [Résultats et logs](#résultats-et-logs)
+    <!-- - [Options du script](#options-du-script)
+    - [Résultats et logs](#r%C3%Asultats-et-logs) -->
 - [Perspectives futures](#perspectives-futures)
 - [Conclusion](#conclusion)
 
@@ -78,8 +78,8 @@ Afin d'assurer la sécurité et la fiabilité des smart contracts, divers types 
 
 - **Analyse statique :** Cette méthode examine le code source du contrat sans l'exécuter, en scrutant chaque ligne de code, elle vise à identifier des erreurs de programmation, des failles de sécurité ou des vulnérabilités potentielles. Elle peut révéler des problèmes comme des boucles infinies, des appels de fonctions dangereuses ou des chemins d'exécution qui pourraient mener à un comportement inattendu...
 
-- **Vérification formelle :** Elle se base sur la création d'un modèle mathématique pour représenter le code et vérifier certaines propriétés ou invariants (conditions toujours vraies) pour prouver mathématiquement que le comportement d'un code correspond à nos attentes dans tous les cas possibles.  
-  L'une des techniques utilisées pour cette vérification s'appelle l'exécution symbolique, c'est la plus répandue dans le developement blockchain. Elle consiste à parcourir tous les chemins possibles dans un programme, en convertissant ces chemins en expressions mathématiques. Ensuite, un solveur d'équations examine ces expressions pour voir si nos propriétés tiennent ou pas. La vérification formelle cherche des preuves mathématiques que nos propriétés sont soit toujours vraies, soit potentiellement fausses.
+- **Vérification formelle :** Elle se base sur la création d'un modèle mathématique pour représenter le code et vérifier certaines propriétés ou invariants pour prouver mathématiquement que le comportement d'un code correspond à nos attentes dans tous les cas possibles. Dans le monde blockchain, la plus répandue des techniques utilisées est l'exécution symbolique. Cette dernière consiste à parcourir tous les chemins possibles dans un programme, en convertissant ces chemins en expressions mathématiques. Ensuite, un solveur d'équations examine ces expressions pour voir si nos propriétés tiennent ou pas. La vérification formelle cherche des preuves mathématiques que nos propriétés sont soit toujours vraies, soit potentiellement fausses.
+  Pour imager cela, imaginons que votre code soit un labyrinthe. Chaque décision, chaque opération et interaction dans le code crée une bifurcation, offrant de multiples chemins possibles. Ces différents chemins sont représentés par des symboles, permettant de les explorer de manière théorique. On peut alors simuler tous les parcours envisageables et s'assurer que le code atteint toujours les résultats attendus.
 
 ### Différents environnements de tests
 
