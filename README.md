@@ -209,7 +209,8 @@ Once the prerequisites are installed, you can follow one of the various [install
 
   ```bash
   git clone https://github.com/Certora/gambit.git
-
+  
+  cd gambit
   ```
 
 - **Then, install Gambit with Cargo:**
