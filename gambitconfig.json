@@ -4,7 +4,7 @@
     "contract": "Ticketer",
     "solc_optimize": true,
     "solc_remappings": [
-      "openzeppelin/contracts=lib/openzeppelin-contracts/"
+      "openzeppelin=lib/openzeppelin-contracts/contracts/"
     ]
   }
 ]
