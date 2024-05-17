@@ -2,27 +2,40 @@
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Blockchain Context](#blockchain-context)
-- [The Importance of Testing in Smart Contract Development](#the-importance-of-testing-in-smart-contract-development)
-  - [Exploring Different Types of Tests](#exploring-different-types-of-tests)
-  - [Different Testing Environments](#different-testing-environments)
-  - [Testing Metrics in Development](#testing-metrics-in-development)
-- [Mutation Testing](#mutation-testing)
-- [Origin and Principle](#origin-and-principle)
-- [How Mutation Testing Works](#how-mutation-testing-works)
-- [Why is Mutation Testing Important?](#why-is-mutation-testing-important)
-- [Test Your Tests with Gambit!](#test-your-tests-with-gambit)
-  - [Installation Prerequisites](#installation-prerequisites)
-  - [Installing and Configuring Gambit](#installing-and-configuring-gambit)
-  - [Creating Mutants](#creating-mutants)
-  - [Outputs Produced by Gambit](#outputs-produced-by-gambit)
-  - [Limitations of Mutation Testing](#limitations-of-mutation-testing)
-- [Putting it into Practice with an Example](#putting-it-into-practice-with-an-example)
-- [Automating Mutation Testing with Foundry](#automating-mutation-testing-with-foundry)
-  - [Example of Automation Script](#example-of-automation-script)
-- [Future Perspectives](#future-perspectives)
-- [Conclusion](#conclusion)
+- [Beyond Coverage: Defeating Hidden Mutants in Your Code](#beyond-coverage-defeating-hidden-mutants-in-your-code)
+  - [Table of Contents](#table-of-contents)
+  - [TL;DR](#tldr)
+  - [Introduction](#introduction)
+  - [Blockchain Context](#blockchain-context)
+  - [The Importance of Testing in Smart Contract Development](#the-importance-of-testing-in-smart-contract-development)
+    - [Exploring Different Types of Tests:](#exploring-different-types-of-tests)
+    - [Different Testing Environments](#different-testing-environments)
+    - [Testing Metrics in Development](#testing-metrics-in-development)
+      - [What is Code Coverage?](#what-is-code-coverage)
+      - [Does Complete Coverage Mean Quality Tests?](#does-complete-coverage-mean-quality-tests)
+  - [Mutation Testing](#mutation-testing)
+    - [Origin and Principle:](#origin-and-principle)
+    - [How Mutation Testing Works:](#how-mutation-testing-works)
+    - [Why is Mutation Testing Important?](#why-is-mutation-testing-important)
+  - [Test Your Tests with Gambit!](#test-your-tests-with-gambit)
+    - [Installation Prerequisites:](#installation-prerequisites)
+    - [Installation and Configuration of Gambit](#installation-and-configuration-of-gambit)
+    - [Creating Mutants:](#creating-mutants)
+    - [Outputs Produced by Gambit:](#outputs-produced-by-gambit)
+    - [Limitations of Mutation Testing:](#limitations-of-mutation-testing)
+  - [Putting it into Practice with an Example](#putting-it-into-practice-with-an-example)
+    - [Prerequisites and Installation:](#prerequisites-and-installation)
+    - [Application:](#application)
+    - [Code Coverage Analysis:](#code-coverage-analysis)
+  - [Automating Mutation Testing with Foundry](#automating-mutation-testing-with-foundry)
+    - [Example of an Automation Script:](#example-of-an-automation-script)
+      - [Script Options to Refine Test Execution:](#script-options-to-refine-test-execution)
+      - [Results and Logs:](#results-and-logs)
+  - [Future Perspectives](#future-perspectives)
+  - [Conclusion](#conclusion)
+  - [Resources / Appendices](#resources--appendices)
+    - [Fundamentals of Software Development and Testing:](#fundamentals-of-software-development-and-testing)
+    - [Tools and Technologies:](#tools-and-technologies)
 
 ## TL;DR
 
@@ -88,7 +101,7 @@ These different stages ensure that the contract is robust and ready for producti
 
 In the world of blockchain development, where security and reliability are paramount, unit tests and fuzzing represent the bare minimum to verify the integrity of smart contracts. However, beyond the application of these tests, how can we assess the quality of our tests? This is where testing metrics, and particularly the measure of code coverage, come into play.
 
-Code coverage, often referred to as "coverage" in English, is the primary metric used to evaluate the quality of automated tests. It measures the percentage of your code that is executed during the running of your tests. More specifically, it can be broken down into several types:
+Code coverage, often referred to as "coverage", is the primary metric used to evaluate the quality of automated tests. It measures the percentage of your code that is executed during the running of your tests. More specifically, it can be broken down into several types:
 
 - Line coverage: This type measures whether each line of code in your smart contract was executed at least once during the tests.
 - Branch coverage: It checks whether every condition in your code (for example, if and switch statements) has been tested in all its possible outcomes (true/false).
@@ -133,41 +146,41 @@ Mutation testing is a powerful tool for assessing the quality of existing tests.
 **Pseudocode Example:**
 Let's assume we have the following function for a very basic illustration:
 
-```
+```solidity
 function isEligibleForRegistration(age)
-if age >= 18
-return true
-else
-return false
+  if age >= 18
+    return true
+  else
+    return false
 ```
 
 And here is a basic test for this function:
 
-```
+```solidity
 test_isEligibleForRegistration()
-assert(isEligibleForRegistration(20) == true) // Test for an eligible user
-assert(isEligibleForRegistration(16) == false) // Test for an ineligible user
+  assert(isEligibleForRegistration(20) == true) // Test for an eligible user
+  assert(isEligibleForRegistration(16) == false) // Test for an ineligible user
 ```
 
 This test checks if the function correctly returns true for a 20-year-old user and false for a 16-year-old user.
 
 Suppose we now introduce a very subtle mutation in the function:
 
-```
+```solidity
 function isEligibleForRegistration(age)
-if age > 18 // Mutation: changing the operator from >= to >
-return true
-else
-return false
+  if age > 18 // Mutation: changing the operator from >= to >
+    return true
+  else
+    return false
 ```
 
 With this mutation, the function would incorrectly return false for a user exactly aged 18, thus violating the initial eligibility rule. But the current test would not notice it; it would remain green. We would then have a surviving mutant.
 
 To detect this mutation and ensure that the age condition is correctly tested, we need to add a specific test case for the age limit:
 
-```
+```solidity
 test_isEligibleForRegistration_ageLimit()
-assert(isEligibleForRegistration(18) == true) // This test would fail with the mutated function
+  assert(isEligibleForRegistration(18) == true) // This test would fail with the mutated function
 ```
 
 This additional test would help detect the introduced mutation and ensure that the edge case of an 18-year-old user is properly handled by the function.
@@ -196,7 +209,8 @@ Once the prerequisites are installed, you can follow one of the various [install
 
   ```bash
   git clone https://github.com/Certora/gambit.git
-
+  
+  cd gambit
   ```
 
 - **Then, install Gambit with Cargo:**
@@ -262,12 +276,13 @@ When you use `Gambit` to generate mutants, the tool creates a `gambit_out` folde
 
 One of the first limitations to consider when using mutation testing, including with Gambit, is the generation of what are called "equivalent mutants." These mutants, although modified, do not lead to any change in the code's behavior. Consider the following example:
 
-```
+```solidity
 int index = 0;
+
 while(...) {
-...;
-index++;
-if (index == 10) break;
+  ...;
+  index++;
+  if (index == 10) break;
 }
 ```
 

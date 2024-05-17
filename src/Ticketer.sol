@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.13;
 
-import {Ownable} from "openzeppelin/contracts/access/Ownable.sol";
+import {Ownable} from "openzeppelin/access/Ownable.sol";
 
 contract Ticketer is Ownable {
     error InvalidValue();

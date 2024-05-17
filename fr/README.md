@@ -2,27 +2,40 @@
 
 ## Table des matières
 
-- [Introduction](#introduction)
-- [Contexte de la blockchain](#contexte-de-la-blockchain)
-- [L'Importance des tests dans le développement de smart contracts](#limportance-des-tests-dans-le-d%C3%Aveloppement-de-smart-contracts)
-  - [Exploration des différents types de tests](#exploration-des-diff%C3%Arents-types-et_méthodes-de-tests)
-  - [Différents environnements de test](#diff%C3%Arents-environnements-de-test)
-  - [Métriques de test dans le développement](#m%C3%Atriques-de-test-dans-le-d%C3%Aveloppement)
-- [Les tests de mutations](#les-tests-de-mutations)
-  - [Origine et principe](#origine-et-principe)
-  - [Fonctionnement des tests de mutations](#fonctionnement-des-tests-de-mutations)
-  - [Pourquoi les tests de mutations sont importants ?](#pourquoi-les-tests-de-mutations-sont-importants)
-- [Testez vos tests avec Gambit!](#testez-vos-tests-avec-gambit)
-  - [Prérequis d'installation](#pr%C3%Arequis-dinstallation)
-  - [Installation et configuration de Gambit](#installation-et-configuration-de-gambit)
-  - [Création des mutants](#cr%C3%Aation-des-mutants)
-  - [Les sorties produites par Gambit](#les-sorties-produites-par-gambit)
-  - [Limitations des tests de mutation](#limitations-des-tests-de-mutation-avec-gambit)
-- [Mise en pratique avec un exemple](mise-en-pratique-avec-un-exemple)
-- [Automatisation des tests de mutation avec Foundry](#automatisation-des-tests-de-mutation-avec-foundry)
-  - [Exemple de script d'automatisation](#exemple-de-script-dautomatisation)
-- [Perspectives futures](#perspectives-futures)
-- [Conclusion](#conclusion)
+- [Au-delà de la couverture : Vaincre les mutants cachés dans votre code](#au-delà-de-la-couverture--vaincre-les-mutants-cachés-dans-votre-code)
+  - [Table des matières](#table-des-matières)
+  - [TL;DR](#tldr)
+  - [Introduction](#introduction)
+  - [Contexte de la blockchain](#contexte-de-la-blockchain)
+  - [L'Importance des tests dans le développement de smart contracts](#limportance-des-tests-dans-le-développement-de-smart-contracts)
+    - [Exploration de différents types et méthodes de tests :](#exploration-de-différents-types-et-méthodes-de-tests-)
+    - [Différents environnements de tests](#différents-environnements-de-tests)
+    - [Métriques de test dans le développement :](#métriques-de-test-dans-le-développement-)
+      - [Qu'est-ce que la couverture de code ?](#quest-ce-que-la-couverture-de-code-)
+      - [Une Couverture complète signifie-t-elle des tests de qualité ?](#une-couverture-complète-signifie-t-elle-des-tests-de-qualité-)
+  - [Les Tests de mutations](#les-tests-de-mutations)
+    - [Origine et principe :](#origine-et-principe-)
+    - [Fonctionnement des tests de mutations :](#fonctionnement-des-tests-de-mutations-)
+    - [Pourquoi les tests de mutations sont importants ?](#pourquoi-les-tests-de-mutations-sont-importants-)
+  - [Testez vos tests avec Gambit!](#testez-vos-tests-avec-gambit)
+    - [Prérequis d'installation :](#prérequis-dinstallation-)
+    - [Installation et configuration de Gambit :](#installation-et-configuration-de-gambit-)
+    - [Création des mutants](#création-des-mutants)
+    - [Les Sorties produites par Gambit :](#les-sorties-produites-par-gambit-)
+    - [Limitations des tests de mutation :](#limitations-des-tests-de-mutation-)
+  - [Mise en pratique avec un exemple](#mise-en-pratique-avec-un-exemple)
+    - [Prérequis et Installation :](#prérequis-et-installation-)
+    - [Application :](#application-)
+    - [Analyse de la Couverture de Code :](#analyse-de-la-couverture-de-code-)
+  - [Automatisation des tests de mutation avec Foundry](#automatisation-des-tests-de-mutation-avec-foundry)
+    - [Exemple de script d'automatisation :](#exemple-de-script-dautomatisation-)
+      - [Options du script pour affiner l'exécution des tests :](#options-du-script-pour-affiner-lexécution-des-tests-)
+      - [Résultats et logs :](#résultats-et-logs-)
+  - [Perspectives futures](#perspectives-futures)
+  - [Conclusion](#conclusion)
+  - [Ressources / Annexes](#ressources--annexes)
+    - [Fondamentaux du Développement et Test de Logiciels :](#fondamentaux-du-développement-et-test-de-logiciels-)
+    - [Outils et Technologies :](#outils-et-technologies-)
 
 ## TL;DR
 
@@ -138,7 +151,7 @@ Les tests de mutation sont un outil puissant pour évaluer la qualité des tests
 **Exemple en pseudo-code :**
 Supposons que nous ayons la fonction suivante pour une illustration très basique :
 
-```
+```solidity
 fonction estEligiblePourInscription(age)
     si age >= 18
         retourner vrai
@@ -148,7 +161,7 @@ fonction estEligiblePourInscription(age)
 
 Et voici un test basique pour cette fonction :
 
-```
+```solidity
 test_estEligiblePourInscription()
     assert(estEligiblePourInscription(20) == vrai)  // Test pour un utilisateur éligible
     assert(estEligiblePourInscription(16) == faux)  // Test pour un utilisateur non éligible
@@ -158,7 +171,7 @@ Ce test vérifie si la fonction retourne correctement vrai pour un utilisateur d
 
 Supposons que nous introduisions maintenant une mutation très subtile dans la fonction :
 
-```
+```solidity
 fonction estEligiblePourInscription(age)
     si age > 18  // Mutation : changement de l'opérateur de >= à >
         retourner vrai
@@ -170,7 +183,7 @@ Avec cette mutation, la fonction retournerait incorrectement faux pour un utilis
 
 Pour détecter cette mutation et s'assurer que la condition d'âge est correctement testée, nous devons ajouter un cas de test spécifique pour l'âge limite :
 
-```
+```solidity
 test_estEligiblePourInscription_ageLimite()
     assert(estEligiblePourInscription(18) == vrai)  // Ce test échouerait avec la fonction mutée
 ```
@@ -201,6 +214,8 @@ Une fois les prérequis installés, vous pouvez suivre une des différentes [mé
 
   ```bash
   git clone https://github.com/Certora/gambit.git
+
+  cd gambit
   ```
 
 - **Puis, installez Gambit avec Cargo :**
@@ -268,8 +283,9 @@ Lorsque vous utilisez `Gambit` pour générer des mutants, l'outil crée un doss
 
 L'une des premières limitations à prendre en compte lors de l'utilisation de tests de mutation, y compris avec Gambit, est la génération de ce que l'on appelle des "mutants équivalents". Ces mutants, bien que modifiés, n'entraînent aucun changement dans le comportement du code. Prenons l'exemple suivant :
 
-```
+```solidity
 int index = 0;
+
 while(...) {
     ...;
     index++;
