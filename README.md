@@ -433,7 +433,7 @@ Ultimately, mutation tests are not an end in themselves, but rather one tool amo
 
 Credits: [**Igor Bournazel**](https://www.linkedin.com/in/igor-bournazel/)
 
-Thanks to [_Franck Maussand_](mailto:franck@maussand.net) for his suggestions and review of this article.
+Thanks to [_Franck Maussand_](mailto:franck@maussand.net) and [_Arnaud Sene_](https://www.linkedin.com/in/arnaud-sene/) for their suggestions and review of this article.
 
 ---
 

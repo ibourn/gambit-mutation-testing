@@ -441,7 +441,7 @@ En fin de compte, les tests de mutation ne sont pas une fin en soi, mais plutôt
 
 Crédits : [**Igor Bournazel**](https://www.linkedin.com/in/igor-bournazel/)
 
-Merci à [_Franck Maussand_](mailto:franck@maussand.net) pour ses suggestions et la relecture de cet article.
+Merci à [_Franck Maussand_](mailto:franck@maussand.net) et [_Arnaud Sene_](https://www.linkedin.com/in/arnaud-sene/) pour leurs suggestions et la relecture de cet article.
 
 ---
 
