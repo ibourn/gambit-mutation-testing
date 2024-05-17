@@ -243,9 +243,7 @@ gambitconfig.json;
     "filename": "/src/Ticketer.sol",
     "contract": "Ticketer",
     "solc_optimize": true,
-    "solc_remappings": [
-      "openzeppelin/contracts=lib/openzeppelin-contracts/contracts/"
-    ]
+    "solc_remappings": ["openzeppelin/=lib/openzeppelin-contracts/contracts/"]
   },
   {
     "filename": "/src/Blip.sol",
